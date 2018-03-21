@@ -13,12 +13,26 @@ conventionMatrixT06 = [firstLine;secondLine;thirdLine;fourthLine];
 
 % Getting theta1
 theta = pi/2 + atan2(conventionMatrixT06(2,1),conventionMatrixT06(1,1));
-theta = [theta; theta + pi];
+theta = [theta; theta; theta + pi; theta + pi];
 
-% Getting theta2
+% Getting theta3
 posJoint5toFrame6 = [0;0;-20e-3];
 transformation = conventionMatrixT06*[posJoint5toFrame6;1];
 posJoint5toFrame0 = transformation(1:3);
+height5 = posJoint5toFrame0(3) - 99e-3;
+distance5 = abs(posJoint5toFrame0(1)) - 25e-3;
+a1 = 120e-3;
+a2 = sqrt((120e-3)^2 + (21e-3)^2);
+arg = (-height5^2 - distance5^2 + a1^2 + a2^2)/(2*a1*a2);
+if abs(arg) > 1
+  fprintf("The point is not in the range of the arm\n");
+  return;
+end
+delta = atan(120e-3/21e-3);
+theta3 = pi - delta - acos(arg);
+theta3 = [theta3; -theta3];
+%theta = completar depois de fazer o theta2 
+
 
 %caso em que não ha triangulo
 
