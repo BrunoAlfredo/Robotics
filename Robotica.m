@@ -19,6 +19,6 @@ T03 = simplify(T02*T23);
 T04 = simplify(T03*T34);
 T05 = simplify(T04*T45);
 T06 = simplify(T05*T56);
-T07(theta) = simplify(T06*T67)
+T07(theta) = simplify(T06*T67);
 
 T07(0,0,0,0,0,0)
