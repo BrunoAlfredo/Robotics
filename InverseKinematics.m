@@ -13,41 +13,54 @@ conventionMatrixT06 = [firstLine; secondLine; thirdLine; fourthLine];
 
 % Getting theta1
 theta = pi/2 + atan2(conventionMatrixT06(2,1),conventionMatrixT06(1,1));
-theta = [theta; theta; theta + pi; theta + pi];
+theta1 = [theta; theta + pi];
+%theta = [theta; theta; theta + pi; theta + pi];
 
-% Getting theta3
+% Getting the position of joint 5 in the world frame
 posJoint5toFrame6 = [0;0;-20e-3];
 transformation = conventionMatrixT06*[posJoint5toFrame6;1];
 posJoint5toFrame0 = transformation(1:3);
-height5 = posJoint5toFrame0(3) - 99e-3;
-distance5 = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2) - 25e-3;
-%distance5 = 0; test when there is no triangule
-a1 = 120e-3;
-a2 = sqrt((120e-3)^2 + (21e-3)^2);
-%height5 = a1 + a2; test when there is no triangule
 
-arg = (-height5^2 - distance5^2 + a1^2 + a2^2)/(2*a1*a2);
-if abs(arg) > 1 % if cosine gives a value bigger than +-1
-  warning('The point is not in the range of the arm')
-  return
+theta3 = [];
+theta2 = [];
+% Getting theta3 and theta2
+for i = 1:length(theta1)
+  height5NotTotal = posJoint5toFrame0(3) - 99e-3*posJoint5toFrame0(3)/abs(posJoint5toFrame0(3));
+  if i == 1
+     distance5NotTotal = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2) - 25e-3;
+  else
+     distance5NotTotal = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2) + 25e-3; 
+  end
+  %distance5NotTotal = 0; test when there is no triangule
+  a1 = 120e-3;
+  a2 = sqrt((120e-3)^2 + (21e-3)^2);
+  %height5NotTotal = a1 + a2; test when there is no triangule
+  arg = (-height5NotTotal^2 - distance5NotTotal^2 + a1^2 + a2^2)/(2*a1*a2);
+  if abs(arg) > 1 % if cosine gives a value bigger than +-1
+    warning('The point is not in the range of the arm in this possible configuration')
+    continue
+  end
+  psi = atan(120e-3/21e-3);
+  theta3aux = pi - psi - acos(arg);
+  theta3 = [theta3; theta3aux; -theta3aux];
+  
+  height5 = posJoint5toFrame0(3);
+  distance5 = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2);
+  a1 = sqrt((99e-3)^2+(25e-3)^2);
+  a2 = sqrt(height5NotTotal^2 + distance5NotTotal^2);
+  arg = (-height5^2 - distance5^2 + a1^2 + a2^2)/(2*a1*a2);
+  if abs(arg) > 1 % if cosine gives a value bigger than +-1
+    warning('The point is not in the range of the arm')
+    return
+  end
+  omega = atan(99e-3/25e-3);
+  delta = atan(height5NotTotal/distance5NotTotal);
+  theta2aux = -acos(arg) + pi + delta - omega;
+  theta2 = [theta2; theta2aux; -theta2aux];
 end
-psi = atan(120e-3/21e-3);
-theta3 = pi - psi - acos(arg);
-theta3 = [theta3; -theta3];
-%theta = completar depois de fazer o theta2 
-
+theta = [theta1(1) theta2(1) theta3(1); theta1(1) theta2(2) theta3(2);
+    theta1(2) theta2(3) theta3(3); theta1(2) theta2(4) theta3(4)];
 %distance for theta 3: 120mm
-
-% Getting theta2
-a1 = sqrt((99e-3)^2+(25e-3)^2);
-a2 = sqrt(height5^2 + distance5^2);
-arg = (-height5^2 - distance5^2 + a1^2 + a2^2)/(2*a1*a2);
-if abs(arg) > 1 % if cosine gives a value bigger than +-1
-  warning('The point is not in the range of the arm')
-  return
-end
-
-%caso em que não ha triangulo
 
 % Getting theta4
 
