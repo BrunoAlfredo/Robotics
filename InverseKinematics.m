@@ -21,21 +21,20 @@ transformation = conventionMatrixT06*[posJoint5toFrame6;1];
 posJoint5toFrame0 = transformation(1:3);
 height5 = posJoint5toFrame0(3) - 99e-3;
 distance5 = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2) - 25e-3;
+%distance5 = 0; test when there is no triangule
 a1 = 120e-3;
-a2 = sqrt((195e-3)^2 + (21e-3)^2);
+a2 = sqrt((120e-3)^2 + (21e-3)^2);
+%height5 = a1 + a2; test when there is no triangule
 
 arg = (-height5^2 - distance5^2 + a1^2 + a2^2)/(2*a1*a2);
 if abs(arg) > 1 % if cosine gives a value bigger than +-1
   warning('The point is not in the range of the arm')
   return
 end
-psi = atan(195e-3/21e-3);
+psi = atan(120e-3/21e-3);
 theta3 = pi - psi - acos(arg);
 theta3 = [theta3; -theta3];
 %theta = completar depois de fazer o theta2 
-
-
-%caso em que não ha triangulo
 
 %distance for theta 3: 120mm
 

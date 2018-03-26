@@ -1,7 +1,7 @@
 %% Direct Kinematics
 
 theta = sym('theta',[1 6]);
-L = [25e-3 99e-3 120e-3 21e-3 0 0 195e-3 20e-3];
+L = [25e-3 99e-3 120e-3 21e-3 0 0 120e-3 20e-3];
 T01 = [cos(theta(1)) -sin(theta(1)) 0 0;sin(theta(1)) cos(theta(1)) 0 0;...
          0 0 1 L(2); 0 0 0 1];
 T12 = [-sin(theta(2)) -cos(theta(2)) 0 -L(1);0 0 -1 0;...
