@@ -1,6 +1,5 @@
 function theta = InverseKinematics(alpha,beta,gama,x,y,z)
 
-ZERO = 1e-8;
 % Getting the convention matrix
 firstLine = [cos(alpha)*cos(gama) - sin(alpha)*cos(beta)*sin(gama) ...
     -cos(alpha)*sin(gama) - sin(alpha)*cos(beta)*cos(gama) ...
@@ -26,12 +25,24 @@ theta3 = [];
 theta2 = [];
 % Getting theta3 and theta2
 for i = 1:length(theta1)
-  height5NotTotal = abs(posJoint5toFrame0(3)) - 99e-3*posJoint5toFrame0(3)/abs(posJoint5toFrame0(3));
+  height5NotTotal = posJoint5toFrame0(3) - 99e-3;
+  module = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2);
   if i == 1
-     distance5NotTotal = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2) - 25e-3;
+    distance5NotTotal = module - 25e-3;    
+    if angdiff(theta1(i),pi + atan2(posJoint5toFrame0(2),posJoint5toFrame0(1))) ~= 0
+      distance5NotTotal = -module - 25e-3;  
+    end
   else
-     distance5NotTotal = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2) + 25e-3; 
-  end
+    distance5NotTotal = -module + 25e-3;
+    if angdiff(theta1(i),pi + atan2(posJoint5toFrame0(2),posJoint5toFrame0(1))) ~= 0
+      distance5NotTotal = module + 25e-3;  
+    end
+  end 
+%   if i == 1
+%      distance5NotTotal = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2) - 25e-3;
+%   else
+%      distance5NotTotal = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2) + 25e-3; 
+%   end
   %distance5NotTotal = 0; test when there is no triangule
   a1 = 120e-3;
   a2 = sqrt((120e-3)^2 + (21e-3)^2);
@@ -43,22 +54,24 @@ for i = 1:length(theta1)
   end
   psi = atan(120e-3/21e-3);
   if i == 1
-    theta3aux = pi - psi - acos(arg);
+    theta3aux1 = pi - psi - acos(arg);
+    theta3aux2 = -pi + acos(arg) - psi;
   else
-    theta3aux = -(pi - psi - acos(arg)); % - because the frame change 
+    theta3aux1 = -(pi - acos(arg) + psi);
+    theta3aux2 = -(-pi + acos(arg) + psi); % - because the frame change 
   end
-  theta3 = [theta3; theta3aux; -theta3aux + pi];
+  theta3 = [theta3; theta3aux1; theta3aux2];
  
   centralAngle = atan2(height5NotTotal,distance5NotTotal);
   arg = (height5NotTotal^2 + distance5NotTotal^2 + a1^2 - a2^2)/...
       (2*a1*sqrt(height5NotTotal^2 + distance5NotTotal^2));
   fi = acos(arg);
   if i == 1
-    theta2nd = pi/2 + centralAngle - fi;
     theta2st = pi/2 - centralAngle - fi;
+    theta2nd = pi/2 - centralAngle + fi;
   else
-    theta2nd = -(pi/2 + centralAngle - fi);
-    theta2st = -(pi/2 - centralAngle - fi); % - because the frame change 
+    theta2st = -(pi/2 - centralAngle - fi); 
+    theta2nd = -(pi/2 - centralAngle + fi); % - because the frame change
   end
   theta2 = [theta2; theta2st ; theta2nd];
 end
