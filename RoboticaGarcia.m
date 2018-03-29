@@ -21,7 +21,7 @@ T02(theta) = simplify(T01*T12);
 T03(theta) = simplify(T02*T23);
 T04(theta) = simplify(T03*T34);
 T05(theta) = simplify(T04*T45);
-T06(theta) = simplify(T05*T56)
+T06(theta) = simplify(T05*T56);
 
 T06(0,0,0,0,0,0);
 
@@ -42,6 +42,4 @@ T15(theta) = simplify(T14*T45);
 T16(theta) = simplify(T15*T56);
 
 T35(theta) = simplify(T34*T45);
-T36(theta) = simplify(T35*T56);
-
-%T45(theta) = simplify();
+T36(theta) = simplify(T35*T56)

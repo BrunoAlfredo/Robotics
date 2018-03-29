@@ -1,5 +1,6 @@
 function theta = InverseKinematics(alpha,beta,gama,x,y,z)
 
+L = [25e-3 99e-3 120e-3 21e-3 0 0 120e-3 20e-3];
 % Getting the convention matrix
 firstLine = [cos(alpha)*cos(gama) - sin(alpha)*cos(beta)*sin(gama) ...
     -cos(alpha)*sin(gama) - sin(alpha)*cos(beta)*cos(gama) ...
@@ -78,13 +79,44 @@ end
 
 theta = [theta1(1) theta2(1) theta3(1); theta1(1) theta2(2) theta3(2);
     theta1(2) theta2(3) theta3(3); theta1(2) theta2(4) theta3(4)];
-theta = theta*180/pi;
 %distance for theta 3: 120mm
 
-% Getting theta4
+% Getting theta4,theta5 and theta6
+orientThetastSol = [];
+orientThetandSol = [];
+for i =1:4 %4 solutions from the previous joints
+  T01 = [cos(theta(i,1)) -sin(theta(i,1)) 0 0;sin(theta(i,1)) cos(theta(i,1)) 0 0;...
+           0 0 1 L(2); 0 0 0 1];
+  T10 = [T01(1:3,1:3)' -T01(1:3,1:3)'*T01(1:3,4);0 0 0 1];
 
-% Getting theta5
+  T12 = [-sin(theta(i,2)) -cos(theta(i,2)) 0 -L(1);0 0 -1 0;...
+           cos(theta(i,2)) -sin(theta(i,2)) 0 0; 0 0 0 1];
+  T21 = [T12(1:3,1:3)' -T12(1:3,1:3)'*T12(1:3,4);0 0 0 1];
 
-% Getting theta6
+  T23 = [cos(theta(i,3)) -sin(theta(i,3)) 0 L(3);sin(theta(i,3)) cos(theta(i,3)) 0 0;...
+           0 0 1 0; 0 0 0 1];
+  T32 = [T23(1:3,1:3)' -T23(1:3,1:3)'*T23(1:3,4);0 0 0 1];
+  
+  product = T32*T21*T10*conventionMatrixT06;
+  
+  if abs(product(2,3)) <= 1
+    theta5 = acos(product(2,3));
+  end
+  
+  if sin(theta5) ~= 0
+    theta4 = -atan2(product(3,3),product(1,3));
+    theta6 = atan2(product(2,1),product(2,2));
+  else
+    warning('The arm is in a singularity and we cannot distinguish the effect of moving joint4 and 6! (solution %d)',i)
+    theta4 = inf;
+    theta6 = inf;
+  end
+  orientThetastSol = [orientThetastSol; theta4 theta5 theta6];
+  orientThetandSol = [orientThetandSol; theta4 + pi -theta5 theta6 + pi];
+end
+
+theta = [theta orientThetastSol; theta orientThetandSol];
+theta = theta*180/pi;
+
 end
 
