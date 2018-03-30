@@ -101,18 +101,25 @@ for i =1:4 %4 solutions from the previous joints
   
   if abs(product(2,3)) <= 1
     theta5 = acos(product(2,3));
+  else
+    warning('It is not possible to determine theta5');
+    theta5 = Inf;
   end
   
   if sin(theta5) ~= 0
-    theta4 = -atan2(product(3,3),product(1,3));
-    theta6 = atan2(product(2,1),product(2,2));
+    theta4st = atan2(product(3,3),-product(1,3));
+    theta6st = atan2(product(2,1),product(2,2));
+    theta4nd = atan2(-product(3,3),product(1,3));
+    theta6nd = atan2(-product(2,1),-product(2,2));
   else
     warning('The arm is in a singularity and we cannot distinguish the effect of moving joint4 and 6! (solution %d)',i)
-    theta4 = inf;
-    theta6 = inf;
+    theta4st = inf;
+    theta6st = inf;
+    theta4nd = inf;
+    theta6nd = inf;
   end
-  orientThetastSol = [orientThetastSol; theta4 theta5 theta6];
-  orientThetandSol = [orientThetandSol; theta4 + pi -theta5 theta6 + pi];
+  orientThetastSol = [orientThetastSol; theta4st theta5 theta6st];
+  orientThetandSol = [orientThetandSol; theta4nd -theta5 theta6nd];
 end
 
 theta = [theta orientThetastSol; theta orientThetandSol];
