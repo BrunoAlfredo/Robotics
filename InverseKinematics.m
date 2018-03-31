@@ -1,5 +1,6 @@
 function theta = InverseKinematics(alpha,beta,gama,x,y,z)
 
+ZERO = 1e-8;
 L = [25e-3 99e-3 120e-3 21e-3 0 0 120e-3 20e-3];
 % Getting the convention matrix
 firstLine = [cos(alpha)*cos(gama) - sin(alpha)*cos(beta)*sin(gama) ...
@@ -13,9 +14,13 @@ fourthLine = [0 0 0 1];
 conventionMatrixT06 = [firstLine; secondLine; thirdLine; fourthLine];
 
 % Getting theta1
-theta = pi/2 + atan2(conventionMatrixT06(2,1),conventionMatrixT06(1,1));
-theta1 = [theta; theta + pi];
-%theta = [theta; theta; theta + pi; theta + pi];
+if abs(conventionMatrixT06(2,1)) < ZERO && abs(conventionMatrixT06(1,1)) < ZERO
+  theta = -pi/2 + atan2(conventionMatrixT06(2,2),conventionMatrixT06(1,2));
+  theta1 = [theta; theta + pi];
+else 
+  theta = pi/2 + atan2(conventionMatrixT06(2,1),conventionMatrixT06(1,1));
+  theta1 = [theta; theta + pi];
+end
 
 % Getting the position of joint 5 in the world frame
 posJoint5toFrame6 = [0;0;-20e-3];
@@ -112,7 +117,7 @@ for i =1:4 %4 solutions from the previous joints
     theta4nd = atan2(-product(3,3),product(1,3));
     theta6nd = atan2(-product(2,1),-product(2,2));
   else
-    warning('The arm is in a singularity and we cannot distinguish the effect of moving joint4 and 6! (solution %d)',i)
+    warning('The arm is in a singularity and we cannot distinguish the effect of moving joint4 and 6! (solution %d and %d)',i,2*i)
     theta4st = inf;
     theta6st = inf;
     theta4nd = inf;
