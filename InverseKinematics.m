@@ -82,8 +82,15 @@ for i = 1:length(theta1)
   theta2 = [theta2; theta2st ; theta2nd];
 end
 
-theta = [theta1(1) theta2(1) theta3(1); theta1(1) theta2(2) theta3(2);
+if isempty(theta2) == 1 
+  theta = [];
+  return;
+elseif length(theta2) < 4
+  theta = [theta1 theta2 theta3];
+else
+  theta = [theta1(1) theta2(1) theta3(1); theta1(1) theta2(2) theta3(2);
     theta1(2) theta2(3) theta3(3); theta1(2) theta2(4) theta3(4)];
+end
 %distance for theta 3: 120mm
 
 % Getting theta4,theta5 and theta6
