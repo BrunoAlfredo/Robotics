@@ -44,15 +44,8 @@ for i = 1:length(theta1)
       distance5NotTotal = module + 25e-3;  
     end
   end 
-%   if i == 1
-%      distance5NotTotal = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2) - 25e-3;
-%   else
-%      distance5NotTotal = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2) + 25e-3; 
-%   end
-  %distance5NotTotal = 0; test when there is no triangule
   a1 = 120e-3;
   a2 = sqrt((120e-3)^2 + (21e-3)^2);
-  %height5NotTotal = a1 + a2; test when there is no triangule
   arg = (-height5NotTotal^2 - distance5NotTotal^2 + a1^2 + a2^2)/(2*a1*a2);
   if abs(arg) > 1 % if cosine gives a value bigger than +-1
     warning('The point is not in the range of the arm in this possible configuration')
@@ -82,21 +75,28 @@ for i = 1:length(theta1)
   theta2 = [theta2; theta2st ; theta2nd];
 end
 
-if isempty(theta2) == 1 
+if isempty(theta2) == 1 %check the case when the arm cannot reach the point
   theta = [];
-  return;
+  return
 elseif length(theta2) < 4
   theta = [theta1 theta2 theta3];
 else
   theta = [theta1(1) theta2(1) theta3(1); theta1(1) theta2(2) theta3(2);
     theta1(2) theta2(3) theta3(3); theta1(2) theta2(4) theta3(4)];
 end
-%distance for theta 3: 120mm
 
 % Getting theta4,theta5 and theta6
+flagTheta5 = 0;
+flagTheta1_6 = 0;
+zeroJoint5 = posJoint5toFrame0(1)==0 && posJoint5toFrame0(2)==0;
+zeroJoint6 = x==0 && y==0;
+if zeroJoint5 && zeroJoint6
+    theta(3:4,:) = [];
+    flagTheta1_6 = 1;
+end
 orientThetastSol = [];
 orientThetandSol = [];
-for i =1:4 %4 solutions from the previous joints
+for i =1:length(theta(:,1))
   T01 = [cos(theta(i,1)) -sin(theta(i,1)) 0 0;sin(theta(i,1)) cos(theta(i,1)) 0 0;...
            0 0 1 L(2); 0 0 0 1];
   T10 = [T01(1:3,1:3)' -T01(1:3,1:3)'*T01(1:3,4);0 0 0 1];
@@ -124,17 +124,32 @@ for i =1:4 %4 solutions from the previous joints
     theta4nd = atan2(-product(3,3),product(1,3));
     theta6nd = atan2(-product(2,1),-product(2,2));
   else
-    warning('The arm is in a singularity and we cannot distinguish the effect of moving joint4 and 6! (solution %d and %d)',i,2*i)
     theta4st = inf;
     theta6st = inf;
     theta4nd = inf;
     theta6nd = inf;
+    flagTheta5 = 1;
   end
   orientThetastSol = [orientThetastSol; theta4st theta5 theta6st];
   orientThetandSol = [orientThetandSol; theta4nd -theta5 theta6nd];
 end
 
 theta = [theta orientThetastSol; theta orientThetandSol];
+
+if flagTheta5 == 1 && flagTheta1_6 == 1
+  warning('The arm is in a singularity and we cannot distinguish the effect of moving joint1,4 and 6!')
+  theta(2:4,:) = [];
+  theta(1,1) = inf;
+  theta(1,6) = inf;
+  theta(1,4) = inf;
+elseif flagTheta1_6 == 1
+  warning('The arm is in a singularity and we cannot distinguish the effect of moving joint1 and 6!')
+  theta(1:4,1) = inf;
+  theta(1:4,6) = inf;
+elseif flagTheta5 == 1
+  warning('The arm is in a singularity and we cannot distinguish the effect of moving joint4 and 6!')
+  theta(5,:) = [];
+end
 theta = theta*180/pi;
 
 end
