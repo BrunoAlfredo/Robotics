@@ -29,6 +29,7 @@ posJoint5toFrame0 = transformation(1:3);
 
 theta3 = [];
 theta2 = [];
+flagNotInRange = 0;
 % Getting theta3 and theta2
 for i = 1:length(theta1)
   height5NotTotal = posJoint5toFrame0(3) - 99e-3;
@@ -49,6 +50,7 @@ for i = 1:length(theta1)
   arg = (-height5NotTotal^2 - distance5NotTotal^2 + a1^2 + a2^2)/(2*a1*a2);
   if abs(arg) > 1 % if cosine gives a value bigger than +-1
     warning('The point is not in the range of the arm in this possible configuration')
+    flagNotInRange = 1;
     continue
   end
   psi = atan(120e-3/21e-3);
@@ -78,8 +80,15 @@ end
 if isempty(theta2) == 1 %check the case when the arm cannot reach the point
   theta = [];
   return
-elseif length(theta2) < 4
-  theta = [theta1 theta2 theta3];
+end
+if flagNotInRange == 1
+  if i == 1
+    theta = [theta1(2);theta1(2)];
+    theta = [theta theta2 theta3];
+  else
+    theta = [theta1(1); theta1(1)];
+    theta = [theta theta2 theta3];
+  end
 else
   theta = [theta1(1) theta2(1) theta3(1); theta1(1) theta2(2) theta3(2);
     theta1(2) theta2(3) theta3(3); theta1(2) theta2(4) theta3(4)];
@@ -144,11 +153,11 @@ if flagTheta5 == 1 && flagTheta1_6 == 1
   theta(1,4) = inf;
 elseif flagTheta1_6 == 1
   warning('The arm is in a singularity and we cannot distinguish the effect of moving joint1 and 6!')
-  theta(1:4,1) = inf;
-  theta(1:4,6) = inf;
-elseif flagTheta5 == 1
+  theta(1:end,1) = inf;
+  theta(1:end,6) = inf;
+elseif flagTheta5 == 1 
+  theta = RemoveRepeatedRows(theta);
   warning('The arm is in a singularity and we cannot distinguish the effect of moving joint4 and 6!')
-  theta(5,:) = [];
 end
 theta = theta*180/pi;
 
