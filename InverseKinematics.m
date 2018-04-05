@@ -1,6 +1,6 @@
 function theta = InverseKinematics(alpha,beta,gama,x,y,z)
 
-ZERO = 1e-8;
+%ZERO = 1e-8;
 L = [25e-3 99e-3 120e-3 21e-3 0 0 120e-3 20e-3];
 % Getting the convention matrix
 firstLine = [cos(alpha)*cos(gama) - sin(alpha)*cos(beta)*sin(gama) ...
@@ -14,18 +14,22 @@ fourthLine = [0 0 0 1];
 conventionMatrixT06 = [firstLine; secondLine; thirdLine; fourthLine];
 
 % Getting theta1
-if abs(conventionMatrixT06(2,1)) < ZERO && abs(conventionMatrixT06(1,1)) < ZERO
-  theta = -pi/2 + atan2(conventionMatrixT06(2,2),conventionMatrixT06(1,2));
-  theta1 = [theta; theta + pi];
-else 
-  theta = pi/2 + atan2(conventionMatrixT06(2,1),conventionMatrixT06(1,1));
-  theta1 = [theta; theta + pi];
-end
+% if abs(conventionMatrixT06(2,1)) < ZERO && abs(conventionMatrixT06(1,1)) < ZERO
+%   theta = -pi/2 + atan2(conventionMatrixT06(2,2),conventionMatrixT06(1,2));
+%   theta1 = [theta; theta + pi];
+% else 
+%   theta = pi/2 + atan2(conventionMatrixT06(2,1),conventionMatrixT06(1,1));
+%   theta1 = [theta; theta + pi];
+% end
 
 % Getting the position of joint 5 in the world frame
 posJoint5toFrame6 = [0;0;-20e-3];
 transformation = conventionMatrixT06*[posJoint5toFrame6;1];
 posJoint5toFrame0 = transformation(1:3);
+
+% Getting theta1
+theta = -pi + atan2(posJoint5toFrame0(2),posJoint5toFrame0(1));
+theta1 = [theta; theta + pi];
 
 theta3 = [];
 theta2 = [];
@@ -158,6 +162,15 @@ elseif flagTheta1_6 == 1
 elseif flagTheta5 == 1 
   theta = RemoveRepeatedRows(theta);
   warning('The arm is in a singularity and we cannot distinguish the effect of moving joint4 and 6!')
+end
+
+% Convert the angles to the [-pi,pi] interval and to degress
+for m = 1:size(theta,1)
+  for k = 1:size(theta,2)
+    if theta(m,k) ~= inf
+      theta(m,k) = wrapToPi(theta(m,k));
+    end
+  end
 end
 theta = theta*180/pi;
 
