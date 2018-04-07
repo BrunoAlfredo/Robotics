@@ -1,6 +1,5 @@
 function theta = InverseKinematics(alpha,beta,gama,x,y,z)
 
-%ZERO = 1e-8;
 L = [25e-3 99e-3 120e-3 21e-3 0 0 120e-3 20e-3];
 % Getting the convention matrix
 firstLine = [cos(alpha)*cos(gama) - sin(alpha)*cos(beta)*sin(gama) ...
@@ -13,15 +12,6 @@ thirdLine = [sin(beta)*sin(gama) sin(beta)*cos(gama) cos(beta) z];
 fourthLine = [0 0 0 1];
 conventionMatrixT06 = [firstLine; secondLine; thirdLine; fourthLine];
 
-% Getting theta1
-% if abs(conventionMatrixT06(2,1)) < ZERO && abs(conventionMatrixT06(1,1)) < ZERO
-%   theta = -pi/2 + atan2(conventionMatrixT06(2,2),conventionMatrixT06(1,2));
-%   theta1 = [theta; theta + pi];
-% else 
-%   theta = pi/2 + atan2(conventionMatrixT06(2,1),conventionMatrixT06(1,1));
-%   theta1 = [theta; theta + pi];
-% end
-
 % Getting the position of joint 5 in the world frame
 posJoint5toFrame6 = [0;0;-20e-3];
 transformation = conventionMatrixT06*[posJoint5toFrame6;1];
@@ -31,10 +21,10 @@ posJoint5toFrame0 = transformation(1:3);
 theta = -pi + atan2(posJoint5toFrame0(2),posJoint5toFrame0(1));
 theta1 = [theta; theta + pi];
 
+% Getting theta3 and theta2
 theta3 = [];
 theta2 = [];
 flagNotInRange = 0;
-% Getting theta3 and theta2
 for i = 1:length(theta1)
   height5NotTotal = posJoint5toFrame0(3) - 99e-3;
   module = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2);
