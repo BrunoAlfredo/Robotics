@@ -26,6 +26,8 @@ theta3 = [];
 theta2 = [];
 flagNotInRange = 0;
 for i = 1:length(theta1)
+  % mechanism to select the correct formula to calculate the sides of the
+  % triangule
   height5NotTotal = posJoint5toFrame0(3) - 99e-3;
   module = sqrt(posJoint5toFrame0(1)^2 + posJoint5toFrame0(2)^2);
   if i == 1
@@ -39,6 +41,7 @@ for i = 1:length(theta1)
       distance5NotTotal = module + 25e-3;  
     end
   end 
+  % first geometric method
   a1 = 120e-3;
   a2 = sqrt((120e-3)^2 + (21e-3)^2);
   arg = (-height5NotTotal^2 - distance5NotTotal^2 + a1^2 + a2^2)/(2*a1*a2);
@@ -57,6 +60,7 @@ for i = 1:length(theta1)
   end
   theta3 = [theta3; theta3aux1; theta3aux2];
  
+  % second geometric method
   centralAngle = atan2(height5NotTotal,distance5NotTotal);
   arg = (height5NotTotal^2 + distance5NotTotal^2 + a1^2 - a2^2)/...
       (2*a1*sqrt(height5NotTotal^2 + distance5NotTotal^2));
@@ -89,6 +93,11 @@ else
 end
 
 % Getting theta4,theta5 and theta6
+% T36(2,3) = cos(theta5)
+% T36(1,3) = -cos(theta4)*sin(theta5)
+% T36(3,3) = sin(theta4)*sin(theta5)
+% T36(2,1) = sin(theta5)*sin(theta6)
+% T36(2,2) = cos(theta6)*sin(theta5)
 flagTheta5 = 0;
 flagTheta1_6 = 0;
 zeroJoint5 = posJoint5toFrame0(1)==0 && posJoint5toFrame0(2)==0;
@@ -139,6 +148,7 @@ end
 
 theta = [theta orientThetastSol; theta orientThetandSol];
 
+% correct some values because of singularities
 if flagTheta5 == 1 && flagTheta1_6 == 1
   warning('The arm is in a singularity and we cannot distinguish the effect of moving joint1,4 and 6!')
   theta(2:4,:) = [];

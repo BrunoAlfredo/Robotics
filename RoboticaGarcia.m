@@ -60,7 +60,7 @@ v55 = T45(1:3,1:3).'*(v44 + cross(w44,T45(1:3,4)));
 v66 = T56(1:3,1:3).'*(v55 + cross(w55,T56(1:3,4)));
 w06 = T06(1:3,1:3)*w66;
 v06 = T06(1:3,1:3)*v66;
-
+%%
 eqns = [w06(1) == 0, w06(2) == 0, w06(3) == 0];
 vars = thetaDot;
 [Jo,~] = equationsToMatrix(eqns,vars);
@@ -69,18 +69,89 @@ eqns = [v06(1) == 0, v06(2) == 0, v06(3) == 0];
 Jp = simplify(Jp);
 Jo = simplify(Jo);
 detJo = det(Jo(:,4:end));
-detJo = simplify(detJo)
+detJo = simplify(detJo);
 
-aux = Jp(3,2)*det([Jp(1:2,1) Jp(1:2,3)]);
-aux1 = simplify(aux);
+submatrix = [Jp(:,1) Jp(:,2) Jp(:,4)];
+detSubmatrix = det(submatrix);
+detSubmatrix = simplify(detSubmatrix)
+%%
+% Jp(theta) = Jp;
+% Jp(0,theta(2),theta(3),theta(4),theta(5),0);
+% Jp(0,theta(2),theta(3),theta(4),0,0)
+% axx = simplify(Jp(0,theta(2),theta(3),theta(4),0,0))
+% q = solve(Jp(1,:) == Jp(3,:),theta(2:4),'Real',true);
+%%
+% Jp(theta) = Jp(1:3,1:3)
+% a = Jp(0,theta(2),theta(3),0,0,0);
+% detJp = det(a);
+% detJp = simplify(detJp);
+% q = solve(detJp == 0,theta(2:3),'Real',true)
+% double(q.theta2)*180/pi
+% double(q.theta3)*180/pi
+% aux = Jp(3,2)*det([Jp(1:2,1) Jp(1:2,3)]);
+% aux1 = simplify(aux);
+% 
+% au = Jp(3,3)*det(Jp(1:2,1:2));
+% au1 = simplify(au)
 
-au = Jp(3,3)*det(Jp(1:2,1:2));
-au1 = simplify(au)
+% total = aux1 + au1;
+% detJp(theta) = simplify(total)
+%%
+detJp(0,theta(2),theta(3),0,0,0)
+eq = formula(detJp);
+agora = solve(eq,theta(2:3),'Real',true);
+%%
+% appr = detJp(0,theta(2),theta(3),0,pi/2,0);
+% appr(theta) = simplify(appr);
+% [q] = solve(appr == 0,theta(2:3),'Real',true,'IgnoreAnalyticConstraints', true);
+% th2 = double(q.theta2*180/pi)
+% th3 = double(q.theta3*180/pi)
+% q = solve(detJp == 0,theta,'Real',true)
+% q.theta2
+% q.theta3
+% q.theta4
+% q.theta5
+% 
+% detJp(0,0,0,0,0,0)
+% detJp(pi/3,0,0,0,0,0)
+% detJp(0,0,0,0,0,-pi/6)
 
-total = aux1 + au1;
-detJp(theta) = simplify(total)
-detJp(0,0,0,0,0,0)
-detJp(pi/3,0,0,0,0,0)
-detJp(0,0,0,0,0,-pi/6)
-% eqDetJp = detJp == 0;
+%%
+% Jp32(theta) = simplify(Jp(3,2));
+% [c,d,e,f,g,h,param,cond] = solve(Jp32 == 0,theta,'Real',true,'ReturnConditions',true);
+% c
+% d
+% e
+% g
+% param
+% a = Jp32(0,2*atan(39481^(1/2)/140 + 141/140), 0 ,0, 0, 0);
+% double(a)
+% k1 = simplify(det([Jp(1,1) Jp(1,3); Jp(2,1) Jp(2,3)]))
+% q = solve(k1 == 0,theta,'Real',true)
+% q.theta2
+% q.theta3
+% q.theta4
+% q.theta5
 % posSingularities = solve(eqDetJp,theta)
+
+%%
+% thet2 = linspace(-pi,pi,11);
+% thet3 = linspace(-pi,pi,11);
+% thet4 = linspace(-pi,pi,11);
+% thet5 = linspace(-pi,pi,11);
+% 
+% sing = [];
+% len = length(thet2);
+% for a = 1:len
+%   waitbar(a/len)
+%   for b = 1:len
+%     for c = 1:len
+%       for d = 1:len  
+%         if abs(detJp(0,thet2(a),thet3(b),thet4(c),thet5(d),0)) < 0.00001
+%           sing = [sing; thet2(a) thet3(b) thet4(c) thet5(d)];
+%           fprintf('Singularities: %f, %f, %f, %f\n',thet2(a),thet3(b),thet4(c),thet5(d))
+%         end
+%       end
+%     end
+%   end
+% end

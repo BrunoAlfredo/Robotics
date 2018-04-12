@@ -1,10 +1,12 @@
 function [alpha,beta,gama,x,y,z] = DirectKinematics(theta)
 
+% Getting beta
 cosBeta = -sin(theta(2) + theta(3))*cos(theta(5)) - cos(theta(2) + ...
     theta(3))*cos(theta(4))*sin(theta(5));
 beta = acos(cosBeta);
 
-if sin(beta) ~= 0
+% Getting alpha and gamma
+if sin(beta) ~= 0 % when the division by sin(beta) is possible
   numeratorAlpha = sin(theta(5))*(sin(theta(1))*sin(theta(4)) + ...
       sin(theta(2) + theta(3))*cos(theta(1))*cos(theta(4))) - ...
       cos(theta(2) + theta(3))*cos(theta(1))*cos(theta(5));
@@ -20,7 +22,7 @@ if sin(beta) ~= 0
       cos(theta(6)) - sin(theta(2) + theta(3))*cos(theta(6))*sin(theta(5)) -...
       cos(theta(2) + theta(3))*sin(theta(4))*sin(theta(6));
   gama = atan2(numeratorGama,denominatorGama);  
-else
+else % when the division by sin(beta) is not possible
   gama = 0;
   numeratorAlpha = cos(theta(5))*sin(theta(6))*(cos(theta(1))*sin(theta(4)) -...
       sin(theta(2) + theta(3))*cos(theta(4))*sin(theta(1))) - cos(theta(6))*...
@@ -34,6 +36,7 @@ else
   alpha = atan2(numeratorAlpha,denominatorAlpha); 
 end
 
+% Getting the positons of the end-effector
 x = (sin(theta(5))*(sin(theta(1))*sin(theta(4)) + sin(theta(2) + theta(3))*...
     cos(theta(1))*cos(theta(4))))/50 - (3*cos(theta(2) + theta(3))*cos(theta(1)))/25 -...
     (cos(theta(1))*(21*sin(theta(2) + theta(3)) + 120*sin(theta(2)) + 25))/1000 -...
