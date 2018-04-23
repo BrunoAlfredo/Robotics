@@ -1,4 +1,4 @@
-function [ w ] = trajectory_following(d, v, trajectory, dtheta)
+function [ w ] = trajectory_following(d, v, trajectory)
 %trajectory_following: follows the trajectory
 %   input: v -> constant, trajectory -> constant, d = 0?
 %   output: w -> we are just controlling the angular velocity
@@ -13,7 +13,7 @@ y_ref = ...;
 theta_ref = ...;
 
 % x,y -> posição do robot no world frame
-theta = cumtrapz(t, dtheta); % numerical integral
+theta = atan(y/x);
 
 % Jacobiana
 J = [cos(theta), -sin(theta), 0 ;...
