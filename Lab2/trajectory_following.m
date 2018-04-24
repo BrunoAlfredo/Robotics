@@ -1,27 +1,29 @@
-function [ w ] = trajectory_following(d, v, trajectory, dtheta)
+function [ w_next ] = trajectory_following(d, v,trajectory, w_actual, x, y, theta)
 %trajectory_following: follows the trajectory
 %   input: v -> constant, trajectory -> constant, d = 0?
-%   output: w -> we are just controlling the angular velocity
+% .        w_actual -> present angular velocity
+%   output: w_next -> next angular velocity to meet trajectory
 
 
 % Time vector
 t = trajectory(1,:,:);
+% x_ref and y_ref vector
+x_ref_vector = trajectory(2,:,:);
+y_ref_vector = trajectory(3,:,:);
 
-% Descobrir x_ref, y_ref, theta_ref a partir da trajetória
-x_ref = ...;
-y_ref = ...;
-theta_ref = ...;
+% Finding x_ref, y_ref, theta_ref from trajectory
+[~,i_x_ref] = min(abs(x_ref_vector - x));
+x_ref = x_ref_vector(i_x_ref);
+[~,i_y_ref] = min(abs(y_ref_vector - y));
+y_ref = y_ref_vector(i_y_ref);
+theta_ref = atan2((y_ref - y_ref_vector(i_y_ref-1))/(x_ref - x_ref_vector(i_y_ref-1)));
 
-% x,y -> posição do robot no world frame
-theta = cumtrapz(t, dtheta); % numerical integral
-
-% Jacobiana
-J = [cos(theta), -sin(theta), 0 ;...
-     sin(theta), cos(theta),  0 ;...
-     0         , 0         ,  1];
- 
 % Re-parametrizing the state space:
-
+theta_til = theta_ref - theta;
+dI = v * sin(theta_til);
+I = norm([x, y] - [x_ref, y_ref]);
+ds = v * cos(theta_til) / (1-c_s * I);
+dtheta_til = w_actual
 
 end
 

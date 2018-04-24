@@ -18,9 +18,7 @@ while(true)
 end
 pioneer_set_controls(Sp,0,0);
 %pioneer_read_odometry
-
-
 %0.930 - 0.566 desvio x 
 %pioneer 2 desalinha para a esquerda
 % 5.882 -> distancia percorrida em frente
-% mm/s
+% cm/s
