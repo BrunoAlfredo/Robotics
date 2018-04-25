@@ -4,19 +4,19 @@ function [ w_next ] = trajectory_following(d, v,trajectory, w_actual, x, y, thet
 % .        w_actual -> present angular velocity
 %   output: w_next -> next angular velocity to meet trajectory
 
-% x_ref, y_ref vector and theta_ref vector
+
+% x_ref and y_ref vector
 x_ref_vector = trajectory(2,:,:);
 y_ref_vector = trajectory(3,:,:);
-theta_ref_vector = trajectory(4,:,:);
 
 % Finding x_ref, y_ref, theta_ref from trajectory
-aux = sqrt((x_ref_vector-x)^2 + (y_ref_vector-y)^2);
-[~,i_ref] = min(aux);
-x_ref = x_ref_vector(i_ref);
-y_ref = y_ref_vector(i_ref);
-theta_ref = theta_ref_vector(i_ref);
+[~,i_x_ref] = min(abs(x_ref_vector - x));
+x_ref = x_ref_vector(i_x_ref);
+[~,i_y_ref] = min(abs(y_ref_vector - y));
+y_ref = y_ref_vector(i_y_ref);
+theta_ref = atan2((y_ref - y_ref_vector(i_y_ref-1))/(x_ref - x_ref_vector(i_y_ref-1)));
 
-% Re-parametrizing the state space and using the linearization
+% Re-parametrizing the state space:
 r = v / w_atual;
 c_s = 1/r;
 theta_til = theta_ref - theta;
