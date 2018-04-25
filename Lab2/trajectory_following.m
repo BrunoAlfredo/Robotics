@@ -1,4 +1,4 @@
-function [ w_next ] = trajectory_following(d, v,trajectory, w_actual, x, y, theta, t)
+function w = trajectory_following(v, trajectory, x, y, theta)
 %trajectory_following: follows the trajectory
 %   input: v -> constant, trajectory -> constant, d = 0?
 % .        w_actual -> present angular velocity
@@ -8,6 +8,7 @@ function [ w_next ] = trajectory_following(d, v,trajectory, w_actual, x, y, thet
 x_ref_vector = trajectory(2,:,:);
 y_ref_vector = trajectory(3,:,:);
 theta_ref_vector = trajectory(4,:,:);
+w_ref_vector = trajectory(5,:,:);
 
 % Finding x_ref, y_ref, theta_ref from trajectory
 aux = sqrt((x_ref_vector-x)^2 + (y_ref_vector-y)^2);
@@ -15,16 +16,17 @@ aux = sqrt((x_ref_vector-x)^2 + (y_ref_vector-y)^2);
 x_ref = x_ref_vector(i_ref);
 y_ref = y_ref_vector(i_ref);
 theta_ref = theta_ref_vector(i_ref);
+w_ref = w_ref_vector(i_ref);
 
 % Re-parametrizing the state space and using the linearization
-r = v / w_atual;
+r = v / w_ref;
 c_s = 1/r;
 theta_til = theta_ref - theta;
-dI = v * sin(theta_til);
 I = norm([x, y] - [x_ref, y_ref]);
 
-ds = v * cos(theta_til) / (1-c_s * I);
-dtheta_til = w_actual;
+ds = v * cos(theta_til);
+dI = v * sin(theta_til);
+
 
 % Values of the controllers
 K2 = 20;
@@ -32,6 +34,7 @@ K3 = 11;
 % (alternativa -> lqr)
 
 u = -K2 * v * I - K3 * abs(v) * theta_til;
-w_next  = 
-end
 
+w = v*cos(theta_til)*c_s/(1-c_s*I) + u;
+
+end
