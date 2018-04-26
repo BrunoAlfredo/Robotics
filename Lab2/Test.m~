@@ -2,7 +2,7 @@ Sp = serial_port_start('/dev/tty.usbserial');
 pioneer_init(Sp);
    
 %%
-serial_port_stop(Sp)
+serial_port_stop(SP)
 
 
 %%

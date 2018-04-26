@@ -5,8 +5,9 @@
 clear
 close all
 
+
 % Velocidade linear constante
-v = 0.5; %m/s 
+v = 2; %m/s 
 % Simulação ou realidade?
 real = 1;
 % Mac ou windows?

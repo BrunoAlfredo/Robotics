@@ -11,25 +11,28 @@ theta_ref_vector = trajectory(4,:,:);
 w_ref_vector = trajectory(5,:,:);
 
 % Finding x_ref, y_ref, theta_ref from trajectory
-aux = sqrt((x_ref_vector-x)^2 + (y_ref_vector-y)^2);
-[~,i_ref] = min(aux);
+aux = sqrt((x_ref_vector-x).^2 + (y_ref_vector-y).^2);
+[I,i_ref] = min(aux);
 x_ref = x_ref_vector(i_ref);
 y_ref = y_ref_vector(i_ref);
 theta_ref = theta_ref_vector(i_ref);
 w_ref = w_ref_vector(i_ref);
 
 % Re-parametrizing the state space and using the linearization
-r = v / w_ref;
-c_s = 1/r;
+if w_ref == 0
+    c_s = 0;
+else
+    r = v / w_ref;
+    c_s = 1/r;
+end
 theta_til = theta_ref - theta;
-I = norm([x, y] - [x_ref, y_ref]);
 
 ds = v * cos(theta_til);
 dI = v * sin(theta_til);
 
 
 % Values of the controllers
-K2 = 20;
+K2 = 100;
 K3 = 11;
 % (alternativa -> lqr)
 

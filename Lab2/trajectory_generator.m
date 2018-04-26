@@ -17,7 +17,7 @@ y_measured = measured_points(:,2);
 
 % Interpolation
 Nt = 126;
-t_query = linspace(t(1), t(end), Nt);
+t_query = linspace(t(1), t(end), Nt)';
 x_ref_pp = pchip(t, x_measured, t_query);
 y_ref_pp = pchip(t, y_measured, t_query);
 
@@ -34,7 +34,8 @@ for i = 2:Nt
     theta_ref_pp(i) = atan2(y_ref_pp(i) - y_ref_pp(i-1),...
                          x_ref_pp(i) - x_ref_pp(i-1));                   
 end
-w_ref_pp = diff(theta_ref_pp)./diff(t);
+w_ref_pp = diff(theta_ref_pp)./diff(t_query);
+w_ref_pp = [0; w_ref_pp];
 
 % plotting the results
 
