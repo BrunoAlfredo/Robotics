@@ -11,7 +11,7 @@ for i = 1:length(t)
     
     w = trajectory_following(v, trajectory, x, y, theta);
     
-    pioneer_set_controls (Sp,v*100,w*10*180/pi); % confirmar unidades!
+    pioneer_set_controls(Sp,v*100,w*10*180/pi); % confirmar unidades!
     
     pause(t(2)-t(1));
 end

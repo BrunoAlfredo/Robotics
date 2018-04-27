@@ -12,6 +12,10 @@ end
 pioneer_init(Sp);
 %delete(timerfindall);
 
+w_vec = [];
+x_vec = [];
+y_vec = [];
+theta_vec = [];
 for i = 1:length(t)
     
     vec = pioneer_read_odometry;
@@ -19,12 +23,14 @@ for i = 1:length(t)
     y = vec(2);
     theta = vec(3);
     x = x * 0.01; % m
+    x_vec = [x_vec; x];
     y = y * 0.01; % m
+    y_vec = [y_vec; y];
     theta = theta * 0.1 * pi / 180; % rad
-    
+    theta_vec = [theta_vec; theta];
     w = trajectory_following(v, trajectory, x, y, theta);
-    
-    pioneer_set_controls (Sp, v*100, w*180/pi); % confirmar unidades!
+    w_vec = [w_vec; w]; 
+    pioneer_set_controls (Sp, v*100, round(w*180/pi); % confirmar unidades!
     
     pause(t(2)-t(1));
 end

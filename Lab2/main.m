@@ -14,7 +14,7 @@ real = 1;
 mac = 1;
 
 % Declaração de variáveis
-Nt = 1000; % nº de elementos do vetor dos tempos
+Nt = 101; % nº de elementos do vetor dos tempos
 t_final = 10; % s
 x_final = 15; % m
 y_final = 10; % m
