@@ -17,18 +17,14 @@ x_ref = x_ref_vector(i_ref);
 y_ref = y_ref_vector(i_ref);
 theta_ref = theta_ref_vector(i_ref);
 w_ref = w_ref_vector(i_ref);
-theta_ref_direction = [x_ref - x_ref_vector(i_ref-1), y_ref - y_ref_vector(i_ref-1)];
-l_direction = [x - x_ref , y - y_ref];
+theta_ref_direction = [theta_ref
+
 
 % Re-parametrizing the state space and using the linearization
 r = v / abs(w_ref);
 c_s = 1/r;
 theta_til = theta_ref - theta;
 
-% Signal of "l"
-if cross(theta_ref_direction, l_direction < 0)
-   l = l * -1; 
-end
 
 
 % ds = v * cos(theta_til);
