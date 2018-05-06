@@ -1,4 +1,4 @@
-function [ output_args ] = Simulation(vt, trajectory, t)
+function [ output_args ] = Simulation(vt_vec, trajectory, tr)
 %SIMULATION: Simulates the behaviour of the robot
 %   Detailed explanation goes here
 options=simset('SrcWorkspace','current','DstWorkspace','current');
@@ -6,20 +6,30 @@ xF=[];
 yF=[];
 thetaF=[];
 x0 = 0;
-y0 = 0;
+y0 = -0.1;
 theta0 = 0;
 wt = 0;
-for i = 1:length(t)    
+figure(3),hold on
+posF = zeros(length(tr),3);
+wF = zeros(length(tr),1);
+wF(1) = 0;
+for i = 1:length(tr)
+    if y0 < 4.5 && x0 < 3.5 % curve zone (FAZER FUNÇÃO QUE RETORNE 1 OU 0 EM CASO DE CURVA PARA SIMPLIFICAR CODIGO)
+        vt = vt_vec(1);
+    else                  % straight line
+        vt = vt_vec(2);
+    end
     v = timeseries(vt);
     w = timeseries(wt);
-    T = t(2)-t(1);
-    sim('Unicycle.slx',T,options);
+    T = tr(2)-tr(1);
+    sim('Unicycle_b.mdl',T,options);
     x0 = x(end);
     y0 = y(end);
     theta0 = theta(end);
-    xF = [xF; x];
-    yF = [yF; y];
-    thetaF = [thetaF ; theta];
+    posF(i,:) = [x0 y0 theta0];
+    %xF = [xF; x];
+    %yF = [yF; y];
+    %thetaF = [thetaF ; theta];
     
     x = x0;
     y = y0;
@@ -28,16 +38,18 @@ for i = 1:length(t)
     wt = trajectory_following(vt, trajectory, x, y, theta);
     wt = round(wrapToPi(wt)*180/pi);
     wt = wt*pi/180;
-    i
+    wF(i) = wt;
+    waitbar(i/length(tr));
 end
-figure;
-subplot(3,1,1), plot(xF);
-title('X')
-subplot(3,1,2), plot(yF);
-title('Y')
-subplot(3,1,3), plot(thetaF);
-title('Theta')
-figure, plot(yF,xF,'x')
-set(gca,'Ydir','reverse')
+% figure;
+% subplot(3,1,1), plot(xF)
+% title('X')
+% subplot(3,1,2), plot(yF)
+% title('Y')
+% subplot(3,1,3), plot(thetaF)
+% title('Theta')
+figure(3), hold on, plot(posF(:,2),posF(:,1),'x')
+% figure, plot(wF)
+
 
 end

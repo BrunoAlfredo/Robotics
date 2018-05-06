@@ -13,31 +13,48 @@ w_ref_vector = trajectory(:,5,:);
 % Finding x_ref, y_ref, theta_ref from trajectory
 aux = sqrt((x_ref_vector-x).^2 + (y_ref_vector-y).^2);
 [l,i_ref] = min(aux);
+if i_ref == 1
+   w=0;
+   return  
+end
 x_ref = x_ref_vector(i_ref);
 y_ref = y_ref_vector(i_ref);
 theta_ref = theta_ref_vector(i_ref);
 w_ref = w_ref_vector(i_ref);
-theta_ref_direction = [theta_ref
-
+theta_ref_direction = [x_ref - x_ref_vector(i_ref-1), y_ref - y_ref_vector(i_ref-1) , 0];
+l_direction = [x - x_ref , y - y_ref , 0];
 
 % Re-parametrizing the state space and using the linearization
 r = v / abs(w_ref);
 c_s = 1/r;
 theta_til = theta_ref - theta;
+theta_til_degrees = 180/pi * theta_til;
 
-
-
-% ds = v * cos(theta_til);
-% dI = v * sin(theta_til);
+% Signal of "l"
+cross_prod = cross(theta_ref_direction, l_direction);
+if cross_prod(3) < 0
+   l = l * -1; 
+end
 
 
 % Values of the controllers
-K2 = -1;
-K3 = 4;
-% (alternativa -> lqr)
+% For curves:
+% K2 = 3;
+% K3 = 2;
+% For straight lines
+% K2 = 3;
+% K3 = 2;
 
-u = -K2 * v * l - K3 * abs(v) * theta_til;
+if y < 4.5 && x < 3.5 % curve zone
+K2 = 3;
+K3 = 2;
+else                  % straight line
+    
+end
+u1 = - K2*v*l;
+u2 =  K3*abs(v)*sin(theta_til);
+u = u1+u2;
 
-w = v*cos(theta_til+u)*c_s/(1-c_s*abs(l)) + u;
+w = v*cos(theta_til)*c_s/(1-c_s*l) + u;
 
 end

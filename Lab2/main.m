@@ -7,15 +7,17 @@ close all
 
 
 % Velocidade linear constante
-v = 2; %m/s 
+v_curve = 1.5; %m/s 
+v_straight = 2; % m/s
+v = [v_curve, v_straight];
 % Simulação ou realidade?
-real = 1;
+real = 0;
 % Mac ou windows?
 mac = 1;
 
 % Declaração de variáveis
-Nt = 101; % nº de elementos do vetor dos tempos
-t_final = 10; % s
+Nt = 100; % nº de elementos do vetor dos tempos
+t_final = 15; % s
 x_final = 15; % m
 y_final = 10; % m
 t = linspace(0, t_final, Nt)';
