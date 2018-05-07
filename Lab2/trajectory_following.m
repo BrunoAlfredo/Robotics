@@ -1,4 +1,4 @@
-function w = trajectory_following(v, trajectory, x, y, theta)
+function [w,v] = trajectory_following(v, trajectory, x, y, theta)
 %trajectory_following: follows the trajectory
 %   input: v -> constant, trajectory -> constant, d = 0?
 % .        w_actual -> present angular velocity
@@ -45,13 +45,7 @@ end
 % K2 = 3;
 % K3 = 2;
 
-if y < 4.5 && x < 3.5 % curve zone (FAZER FUNÇÃO QUE RETORNE 1 OU 0 EM CASO DE CURVA PARA SIMPLIFICAR CODIGO)
-    K2 = 3;
-    K3 = 2;
-else                  % straight line
-    K2 = 0.01;
-    K3 = 0.2;
-end
+[K2, K3, v] = Gain_tune (x, y);
 u1 = - K2*v*l;
 u2 =  K3*abs(v)*sin(theta_til);
 u = u1+u2;

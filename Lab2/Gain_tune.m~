@@ -1,0 +1,24 @@
+function [ K2, K3 ] = Gain_tune ( x, y )
+%Gain_tune Breaks trajectory into curves and stright lines returning gains
+%   Detailed explanation goes here
+
+figure(3)
+if y < 4.5 && x < 3.826 % curve zone (FAZER FUNÇÃO QUE RETORNE ganhos EM CASO DE CURVA PARA SIMPLIFICAR CODIGO)
+    K2 = 3;
+    K3 = 2;
+    rectangle('Position',[0 0 4.5 3.5],'LineStyle','--',...
+              'EdgeColor', [0.8, 0.8, 0.8])
+elseif y > 4.5 && y < 17.25 && x < 3.79
+    K2 = 0.01;
+    K3 = 0.2;
+%     rectangle('Position',[0 0 3.5 4.5],'LineStyle','--',...
+%               'EdgeColor', [0.8, 0.8, 0.8])
+elseif y > 17.25 && y < 18.85 && x < 3.79
+    K2 = 3;
+    K3 = 2;
+%     rectangle('Position',[0 0 3.5 4.5],'LineStyle','--',...
+%               'EdgeColor', [0.8, 0.8, 0.8])
+end
+
+end
+

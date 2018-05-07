@@ -1,4 +1,4 @@
-function [ output_args ] = Simulation(vt_vec, trajectory, tr)
+function [ output_args ] = Simulation(trajectory, tr)
 %SIMULATION: Simulates the behaviour of the robot
 %   Detailed explanation goes here
 options=simset('SrcWorkspace','current','DstWorkspace','current');
@@ -13,12 +13,8 @@ figure(3),hold on
 posF = zeros(length(tr),3);
 wF = zeros(length(tr),1);
 wF(1) = 0;
+vt = 0.5; % initial velocity
 for i = 1:length(tr)
-    if y0 < 4.5 && x0 < 3.5 % curve zone (FAZER FUNÇÃO QUE RETORNE 1 OU 0 EM CASO DE CURVA PARA SIMPLIFICAR CODIGO)
-        vt = vt_vec(1);
-    else                  % straight line
-        vt = vt_vec(2);
-    end
     v = timeseries(vt);
     w = timeseries(wt);
     T = tr(2)-tr(1);
@@ -35,7 +31,7 @@ for i = 1:length(tr)
     y = y0;
     theta = theta0;
         
-    wt = trajectory_following(vt, trajectory, x, y, theta);
+    [wt,vt] = trajectory_following(vt, trajectory, x, y, theta);
     wt = round(wrapToPi(wt)*180/pi);
     wt = wt*pi/180;
     wF(i) = wt;
