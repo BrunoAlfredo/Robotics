@@ -12,8 +12,8 @@ real = 0;
 mac = 1;
 
 % Declaração de variáveis
-Nt = 100; % nº de elementos do vetor dos tempos
-t_final = 15; % s
+Nt = 500; % nº de elementos do vetor dos tempos
+t_final = 25; % s
 x_final = 15; % m
 y_final = 10; % m
 t = linspace(0, t_final, Nt)';

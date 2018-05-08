@@ -1,4 +1,4 @@
-function [w,v] = trajectory_following(v, trajectory, x, y, theta)
+function [w,v] = trajectory_following(v, trajectory, x, y, theta, w_prev)
 %trajectory_following: follows the trajectory
 %   input: v -> constant, trajectory -> constant, d = 0?
 % .        w_actual -> present angular velocity
@@ -25,7 +25,7 @@ theta_ref_direction = [x_ref - x_ref_vector(i_ref-1), y_ref - y_ref_vector(i_ref
 l_direction = [x - x_ref , y - y_ref , 0];
 
 % Re-parametrizing the state space and using the linearization
-r = v / abs(w_ref);
+r = v / w_ref;
 c_s = 1/r;
 theta_til = theta_ref - theta;
 theta_til_degrees = 180/pi * theta_til;
@@ -45,10 +45,11 @@ end
 % K2 = 3;
 % K3 = 2;
 
-[K2, K3, v] = Gain_tune (x, y);
+[K2, K3, v] = Type_of_trajectory (x, y);
 u1 = - K2*v*l;
 u2 =  K3*abs(v)*sin(theta_til);
 u = u1+u2;
+
 
 w = v*cos(theta_til)*c_s/(1-c_s*l) + u;
 

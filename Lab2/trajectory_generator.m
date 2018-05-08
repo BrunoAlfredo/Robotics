@@ -20,7 +20,8 @@ measured_points = [0,                                           0;... % [x,y]
                    c,                                     d+m(14);... 
                    c,                                         a-1;...
                    c+0.8,                                       a;...
-                   2.99+m(27)-(m(8)+m(4))/2,                    a;...
+                   2.99+m(27)-(m(8)+m(4))/2-1,                  a;...
+                   2.99+m(27)-(m(8)+m(4))/2,                  a-1;...
                    2.99+m(27)-(m(8)+m(4))/2,                  a-b];
                    %17.064-(15.743-(1.216+1.671)/2), 3.9205];   
 
@@ -64,6 +65,9 @@ w_ref_pp = [0; w_ref_pp];
 
 figure
 plot(t_query, theta_ref_pp*180/pi)
+title('Evolution of \theta_ref')
+xlabel('Time(s)')
+ylabel('\theta (º)')
 
 figure(3)
 hold on
