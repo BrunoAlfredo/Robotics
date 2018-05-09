@@ -1,4 +1,4 @@
-function [t_query, x_ref_pp, y_ref_pp, theta_ref_pp, w_ref_pp] = trajectory_generator(Nt)
+function [t_query, x_ref_pp, y_ref_pp, theta_ref_pp, w_ref_pp] = trajectory_generator
 %trajectory_generator: generates the reference trajectory
 %   Detailed explanation goes here
 
@@ -19,7 +19,7 @@ measured_points = [0,                                           0;... % [x,y]
                    2.84+0.15,                                   d;... %pontos da sala
                    c,                                     d+m(14);... 
                    c,                                         a-1;...
-                   c+1,                                       a;...
+                   c+0.8,                                       a;...
                    2.99+m(27)-(m(8)+m(4))/2-1,                  a;...
                    2.99+m(27)-(m(8)+m(4))/2,                  a-1;...
                    2.99+m(27)-(m(8)+m(4))/2,                  a-b];
@@ -48,10 +48,7 @@ x_measured = measured_points(:,1);
 y_measured = measured_points(:,2);
 
 % Interpolation
-<<<<<<< HEAD
-=======
 Nt = 252;
->>>>>>> 12ae495c6f96bf8f3551f71688a7d2582f104e8d
 t_query = linspace(t(1), t(end), Nt)';
 x_ref_pp = pchip(t, x_measured, t_query);
 y_ref_pp = pchip(t, y_measured, t_query);
