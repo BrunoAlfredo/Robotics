@@ -7,9 +7,9 @@ close all
 
 
 % Simulação ou realidade?
-real = 0;
+real = false;
 % Mac ou windows?
-mac = 1;
+mac = true;
 
 % Declaração de variáveis
 Nt = 500; % nº de elementos do vetor dos tempos
