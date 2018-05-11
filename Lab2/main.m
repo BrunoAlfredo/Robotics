@@ -4,9 +4,9 @@
 clear
 close all
 
-% Simulação ou realidade?
-real = 1;
-% Mac ou windows?
+% Simultation or reality?
+real = 0;
+% Mac or windows?
 mac = 1;
 
 if real == 1
@@ -19,24 +19,13 @@ if real == 1
     pioneer_init(Sp);
 end
 
-% Declaração de variáveis
-Nt = 188; % nº de elementos do vetor dos tempos
-t_final = 10; % s
-x_final = 15; % m
-y_final = 10; % m
-t = linspace(0, t_final, Nt)';
-Nx = x_final * 100;
-Ny = y_final * 100;
-Np = 1000; % nº de pontos do vetor de trajetória
 
 % Trajectory
-[t_ref, x_ref, y_ref, theta_ref, w_ref] = trajectory_generator(Np);
-trajectory = [t_ref, x_ref, y_ref, theta_ref, w_ref];
-
+trajectory = trajectory_generator;
 
 % Simulation or real robot?
-if real
-   w_vec = RealRobot(trajectory, Sp);
+if real == 1
+   RealRobot(trajectory, Sp);
 else
-   Simulation(trajectory, t);
+   Simulation(trajectory);
 end

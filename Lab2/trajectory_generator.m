@@ -1,6 +1,9 @@
-function [t_query, x_ref_pp, y_ref_pp, theta_ref_pp, w_ref_pp] = trajectory_generator(Nt)
+function trajectory = trajectory_generator
 %trajectory_generator: generates the reference trajectory
 %   Detailed explanation goes here
+
+% Declaration of variables
+Nt = 1000; % nº of trajectory points
 
 % Measured points:
 m = [1.671, 1.672, 1.672, 1.672, 1.206, 1.206, 1.209, 1.674, 1.705, ...
@@ -76,6 +79,9 @@ set(gca,'Ydir','reverse')
 title('Trajectory')
 ylabel('x [m]')
 xlabel('y [m]')
+
+trajectory = [t_query, x_ref_pp, y_ref_pp, theta_ref_pp, w_ref_pp];
+
 
 end
 

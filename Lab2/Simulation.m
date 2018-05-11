@@ -1,6 +1,13 @@
-function [ output_args ] = Simulation(trajectory, tr)
+function Simulation(trajectory)
 %SIMULATION: Simulates the behaviour of the robot
 %   Detailed explanation goes here
+
+% Declaration of simulation variables
+Nt = 200; % number of simulation points
+t_final = 10;
+
+
+tr = linspace(0, t_final, Nt)';
 options=simset('SrcWorkspace','current','DstWorkspace','current');
 xF=[];
 yF=[];

@@ -1,4 +1,4 @@
-function [w_vec]=RealRobot(trajectory,Sp)
+function RealRobot(trajectory,Sp)
 %RealRobot: Moves the robot in the lab
 %   Detailed explanation goes here
 

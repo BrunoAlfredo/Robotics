@@ -4,12 +4,8 @@ function [w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta)
 % .        w_actual -> present angular velocity
 %   output: w_next -> next angular velocity to meet trajectory
 
-[K2, K3, v_max, j] = Type_of_trajectory (x, y);
-% if j == 1 % open-loop trajectory?
-%     open_loop = 1
-% else
-%     open_loop = 0
-% end
+[K2, K3, v_max] = Type_of_trajectory (x, y);
+
 
 % x_ref, y_ref vector and theta_ref vector
 x_ref_vector = trajectory(:,2,:);
@@ -32,11 +28,6 @@ w_ref = w_ref_vector(i_ref);
 theta_ref_direction = [x_ref - x_ref_vector(i_ref-1), y_ref - y_ref_vector(i_ref-1) , 0];
 l_direction = [x - x_ref , y - y_ref , 0];
 
-% if open_loop == 1
-%     w = w_ref;
-%     return
-% end
-
 % Relation between v and w
 factor = 7;
 v =  abs(1 / ((w_ref/(2*pi))*factor));
@@ -55,15 +46,6 @@ cross_prod = cross(theta_ref_direction, l_direction);
 if cross_prod(3) < 0
    l = l * -1; 
 end
-
-
-% Values of the controllers
-% For curves:
-% K2 = 3;
-% K3 = 2;
-% For straight lines
-% K2 = 3;
-% K3 = 2;
 
 
 u1 = - K2*v*l;
