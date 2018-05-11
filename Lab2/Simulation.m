@@ -32,9 +32,9 @@ for i = 1:length(tr)
     theta = theta0;
     
     if i > 1
-        [wt,vt] = trajectory_following(vt, trajectory, x, y, theta, wF(i-1));
+        [wt,vt, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta, wF(i-1));
     else
-        [wt,vt] = trajectory_following(vt, trajectory, x, y, theta, wF(1));
+        [wt,vt, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta, wF(1));
     end
     
     wt = round(wrapToPi(wt)*180/pi);
@@ -42,6 +42,7 @@ for i = 1:length(tr)
     wF(i) = wt;
     waitbar(i/length(tr));
     plot(posF(i,2),posF(i,1),'x','Color', [1, 0.7, 0])
+    plot(y_ref, x_ref,'x','Color', 'g')
 end
 % figure;
 % subplot(3,1,1), plot(xF)

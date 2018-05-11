@@ -1,4 +1,4 @@
-function [w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta, w_prev)
+function [w,v] = trajectory_following(trajectory, x, y, theta, w_prev)
 %trajectory_following: follows the trajectory
 %   input: v -> constant, trajectory -> constant, d = 0?
 % .        w_actual -> present angular velocity
@@ -22,7 +22,6 @@ aux = sqrt((x_ref_vector-x).^2 + (y_ref_vector-y).^2);
 [l,i_ref] = min(aux);
 if i_ref == 1
    w=0;
-   x_ref = 0; y_ref = 0;
    return  
 end
 x_ref = x_ref_vector(i_ref);
@@ -65,14 +64,12 @@ u2 =  K3*abs(v)*sin(theta_til);
 u = u1+u2;
 
 
-% w = v*cos(theta_til)*c_s/(1-c_s*l) + u;
-w = w_ref + u;
+w = v*cos(theta_til)*c_s/(1-c_s*l) + u;
 
-ang_speed_limit = 40; % degrees per second
-
+ang_speed_limit = 
 if w * 180 / pi > ang_speed_limit
    warning('couldnt perform such high \omega')
-   w = ang_speed_limit * pi / 180;
+   w = 
 end
 
 end

@@ -5,11 +5,8 @@ function [ K2, K3, v, i ] = Type_of_trajectory ( x, y )
 figure(3)
 if y < 4.5 && x < 3.826 % curve zone
     v = 1.5;
-    %     sim
-    %     K2 = 0.6*v;
-    %     K3 = 0.6*v;
-    K2 = 0.1*v;
-    K3 = 0.1*v;
+    K2 = 0.6*v;
+    K3 = 0.6*v;
     rectangle('Position',[0 0 4.5 3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
     i = 1;
