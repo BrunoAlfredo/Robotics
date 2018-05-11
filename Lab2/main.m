@@ -20,7 +20,7 @@ if real == 1
 end
 
 % Declaração de variáveis
-Nt = 100; % nº de elementos do vetor dos tempos
+Nt = 188; % nº de elementos do vetor dos tempos
 t_final = 10; % s
 x_final = 15; % m
 y_final = 10; % m

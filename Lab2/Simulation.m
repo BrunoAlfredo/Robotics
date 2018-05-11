@@ -31,11 +31,9 @@ for i = 1:length(tr)
     y = y0;
     theta = theta0;
     
-    if i > 1
-        [wt,vt, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta, wF(i-1));
-    else
-        [wt,vt, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta, wF(1));
-    end
+    
+    [wt,vt, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta);
+    
     
     wt = round(wrapToPi(wt)*180/pi);
     wt = wt*pi/180;

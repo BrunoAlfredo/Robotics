@@ -8,29 +8,29 @@ if y < 4.5 && x < 3.826 % curve zone
     %     sim
     %     K2 = 0.6*v;
     %     K3 = 0.6*v;
-    K2 = 0.1*v;
-    K3 = 0.1*v;
+    K2 = 2*v;
+    K3 = 2*v;
     rectangle('Position',[0 0 4.5 3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
     i = 1;
 elseif y > 4.5 && y < 17.25 && x < 3.826 % straight line
-    v = 2;
-    K2 = 0.01*v;
-    K3 = 0.4*v;
+    v = 3.5;
+    K2 = 0.8*v;
+    K3 = 0.8*v;
     rectangle('Position',[4.5 0 17.25-4.5 3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
     i = 2;
 elseif y > 17.25 && y < 18.85 && x < 3.79 % curve
     v = 1;
-    K2 = 6*v;
-    K3 = 4*v;
+    K2 = 2*v;
+    K3 = 2*v;
     rectangle('Position',[17.25 0 18.85-17.25 3.79],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
     i = 3;
 elseif y > 17.64 && y < 18.85 && x > 3.79 && x < 16.23 % straight line
     v = 2;
-    K2 = 0.4*v;
-    K3 = 0.4*v;
+    K2 = 0.8*v;
+    K3 = 0.8*v;
     rectangle('Position',[17.64 3.826  18.85-17.64 16.23-3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
     i = 4;

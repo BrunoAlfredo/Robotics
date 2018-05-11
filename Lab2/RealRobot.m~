@@ -21,7 +21,7 @@ y = y * 0.001; % m
 y_vec = [y_vec; y];
 theta = theta * 0.1 * pi / 180; % rad
 theta_vec = [theta_vec; theta];
-[w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta);
+[w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta, 0);
 w_vec = [w_vec; w]; 
 
 %t = timer('Period', T, 'ExecutionMode', 'fixedRate');
@@ -60,7 +60,7 @@ while (1)
 %       %stop(t)
 %       break
 %   end
-  pause(0.08)
+  pause(0.01)
   pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
   
   %aux1 = [aux1; aux];

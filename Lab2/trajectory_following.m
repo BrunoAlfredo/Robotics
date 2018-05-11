@@ -1,10 +1,10 @@
-function [w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta, w_prev)
+function [w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta)
 %trajectory_following: follows the trajectory
 %   input: v -> constant, trajectory -> constant, d = 0?
 % .        w_actual -> present angular velocity
 %   output: w_next -> next angular velocity to meet trajectory
 
-[K2, K3, v, j] = Type_of_trajectory (x, y);
+[K2, K3, v_max, j] = Type_of_trajectory (x, y);
 % if j == 1 % open-loop trajectory?
 %     open_loop = 1
 % else
@@ -22,7 +22,7 @@ aux = sqrt((x_ref_vector-x).^2 + (y_ref_vector-y).^2);
 [l,i_ref] = min(aux);
 if i_ref == 1
    w=0;
-   x_ref = 0; y_ref = 0;
+   x_ref = 0; y_ref = 0; v = v_max;
    return  
 end
 x_ref = x_ref_vector(i_ref);
@@ -37,6 +37,12 @@ l_direction = [x - x_ref , y - y_ref , 0];
 %     return
 % end
 
+% Relation between v and w
+factor = 7;
+v =  abs(1 / ((w_ref/(2*pi))*factor));
+if v > v_max
+   v = v_max; 
+end
 
 % Re-parametrizing the state space and using the linearization
 r = v / w_ref;
@@ -68,7 +74,7 @@ u = u1+u2;
 % w = v*cos(theta_til)*c_s/(1-c_s*l) + u;
 w = w_ref + u;
 
-ang_speed_limit = 40; % degrees per second
+ang_speed_limit = 45; % degrees per second
 
 if w * 180 / pi > ang_speed_limit
    warning('couldnt perform such high \omega')
