@@ -2,10 +2,13 @@ t = timer('Period', 1, 'ExecutionMode', 'fixedRate');
 
 t.StartFcn = {@my_callback_fcn, 'My start message'};
 
-t.TimerFcn = @(x,y)disp('Hello World!');
+t.TimerFcn = @my_function;
 
 start(t)
 
+function my_function(obj, event)
+disp("ola");
+end
 
 function my_callback_fcn(obj, event, text_arg)
 
