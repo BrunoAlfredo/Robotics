@@ -36,6 +36,7 @@ while (1)
   j = j+1;
   
   vec = pioneer_read_odometry;
+  vec = [0 0 0];
   x = vec(1);
   y = vec(2);
   theta = vec(3);
@@ -56,13 +57,13 @@ while (1)
   w_vec = [w_vec; w];
   v_vec = [v_vec; v];
   
-  aux = pioneer_read_sonars;
+  %aux = pioneer_read_sonars;
 %   if (sensors(1)<500||sensors(8)<500||sensors(4)<500||sensors(5)<500)
-%       %stop(t)
+%       %stop(sendMoveTimer)
 %       break
 %   end
-  pause(0.08)
-  pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
+  %pause(0.08)
+  %pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
   
   %sensors = [sensors; aux];
 end
@@ -82,7 +83,7 @@ disp(msg)
 disp("Starting the motion of the robot...")
 end
 
-function updateRobot(v,w,Sp)
+function updateRobot(Obj,event,v,w,Sp)
     pioneer_set_controls (Sp, round(v*100), round(wrapTo2Pi(w)*180/pi)); % confirmar unidades!
 end
 
