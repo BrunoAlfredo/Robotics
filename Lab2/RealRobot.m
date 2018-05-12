@@ -2,19 +2,19 @@ function RealRobot(trajectory,Sp)
 %RealRobot: Moves the robot in the lab
 %   Detailed explanation goes here
 
-T = 1; % period of the timer
+T = 0.08; % period of the timer
 v_vec = [];
 w_vec = [];
 x_vec = [];
 y_vec = [];
 theta_vec = [];
-aux1 =[];
+sensors =[];
   
 vec = pioneer_read_odometry;
 x = vec(1);
 y = vec(2);
 theta = vec(3);
-  
+
 x = x * 0.001; % m
 x_vec = [x_vec; x];
 y = y * 0.001; % m
@@ -24,11 +24,12 @@ theta_vec = [theta_vec; theta];
 [w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta);
 w_vec = [w_vec; w]; 
 
-%t = timer('Period', T, 'ExecutionMode', 'fixedRate');
-%t.TimerFcn=@(v,w,Sp)pioneer_set_controls (Sp, round(v*100), round(wrapTo2Pi(w)*180/pi));
-%start(t)
+% Activate the timer of the comands to send to the robot
+% sendMoveTimer = timer('Period', T, 'ExecutionMode', 'fixedRate');
+% sendMoveTimer.StartFcn = @starting;
+% sendMoveTimer.TimerFcn={@updateRobot,v,w,Sp};
+% start(sendMoveTimer)
 
-% t.StartFcn = {@my_callback_fcn, 'Starting moving the robot'};
 pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1)); % confirmar unidades!
 j = 0;
 while (1) 
@@ -56,14 +57,14 @@ while (1)
   v_vec = [v_vec; v];
   
   aux = pioneer_read_sonars;
-%   if (aux(1)<500||aux(8)<500||aux(4)<500||aux(5)<500)
+%   if (sensors(1)<500||sensors(8)<500||sensors(4)<500||sensors(5)<500)
 %       %stop(t)
 %       break
 %   end
   pause(0.08)
   pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
   
-  %aux1 = [aux1; aux];
+  %sensors = [sensors; aux];
 end
 
 pioneer_set_controls(Sp,0,0);
@@ -71,21 +72,18 @@ pioneer_set_controls(Sp,0,0);
 end
 
 
-% function my_callback_fcn(obj, event, text_arg)
-% 
-% txt1 = ' event occurred at ';
-% txt2 = text_arg;
-% 
-% event_type = event.Type;
-% event_time = datestr(event.Data.time);
-% 
-% msg = [event_type txt1 event_time];
-% disp(msg)
-% disp(txt2)
-% end
-% 
-% function [] = updateRobot(v,w,Sp)
-%     pioneer_set_controls (Sp, round(v*100), round(wrapTo2Pi(w)*180/pi)); % confirmar unidades!
-% end
+function starting(obj, event)
+txt1 = ' event occurred at ';
+event_type = event.Type;
+event_time = datestr(event.Data.time);
+
+msg = [event_type txt1 event_time];
+disp(msg)
+disp("Starting the motion of the robot...")
+end
+
+function updateRobot(v,w,Sp)
+    pioneer_set_controls (Sp, round(v*100), round(wrapTo2Pi(w)*180/pi)); % confirmar unidades!
+end
 
 
