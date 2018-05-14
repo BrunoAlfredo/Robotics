@@ -1,15 +1,14 @@
 function RealRobot(mac, v, trajectory,t)
-%UNTITLED4 Summary of this function goes here
+%RealRobot: Moves the robot in the lab
 %   Detailed explanation goes here
 
-% inicialização da porta
+% port initialization
 if mac
     Sp = serial_port_start('/dev/tty.usbserial');
 else
     
 end
 pioneer_init(Sp);
-w_old = 0;
 
 for i = 1:length(t)
     
@@ -18,11 +17,11 @@ for i = 1:length(t)
     y = y * 0.01; % m
     theta = theta * 0.1 * pi / 180; % rad
     
-    w = trajectory_following(v,trajectory, x, y, theta, w_old);
-    w = w_old;
+    w = trajectory_following(v, trajectory, x, y, theta);
     
-    pioneer_set_controls (Sp,v*100,w*10*180/pi); % confirmar unidades!
+    pioneer_set_controls (Sp, v*100, w*10*180/pi); % confirmar unidades!
     
+    pause(t(2)-t(1));
 end
 
 end

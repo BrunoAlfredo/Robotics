@@ -9,7 +9,7 @@ Nt = 1000; % nº of trajectory points
 m = [1.671, 1.672, 1.672, 1.672, 1.206, 1.206, 1.209, 1.674, 1.705, ...
      1.203, 1.216, 1.672, 1.576, 1.668, 0.906, 0.972, 1.428, 2.10,...
      1.18,  0.74,  1.18,  0.15,  0.495, 0.20,  15.743,15.767,15.747,...
-     15.995];
+     15.995]; % m
 
 a = m(28)+2.8550-m(5)/2; b = m(26)-(m(7)+m(12))/2; c = 2.99; d = 2.36+0.495;
 
@@ -64,18 +64,18 @@ w_ref_pp = [0; w_ref_pp];
 
 % plotting the results
 
-figure
-plot(t_query, theta_ref_pp*180/pi)
-title('Evolution of \theta_ref')
-xlabel('Time(s)')
-ylabel('\theta (º)')
+% figure
+% plot(t_query, theta_ref_pp*180/pi)
+% title('Evolution of \theta_ref')
+% xlabel('Time(s)')
+% ylabel('\theta (º)')
 
 figure(3)
 hold on
 plot(y_ref_pp, x_ref_pp,'.')
 set(gca,'Ydir','reverse')
 plot(y_measured, x_measured, 'o')
-set(gca,'Ydir','reverse')
+%set(gca,'Ydir','reverse')
 title('Trajectory')
 ylabel('x [m]')
 xlabel('y [m]')

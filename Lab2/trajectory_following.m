@@ -4,7 +4,7 @@ function [w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta)
 % .        w_actual -> present angular velocity
 %   output: w_next -> next angular velocity to meet trajectory
 
-[K2, K3, v_max] = Type_of_trajectory (x, y);
+[K2, K3, v_max, factor] = Type_of_trajectory (x, y);
 
 
 % x_ref, y_ref vector and theta_ref vector
@@ -29,7 +29,6 @@ theta_ref_direction = [x_ref - x_ref_vector(i_ref-1), y_ref - y_ref_vector(i_ref
 l_direction = [x - x_ref , y - y_ref , 0];
 
 % Relation between v and w
-factor = 7;
 v =  abs(1 / ((w_ref/(2*pi))*factor));
 if v > v_max
    v = v_max; 
@@ -53,14 +52,16 @@ u2 =  K3*abs(v)*sin(theta_til);
 u = u1+u2;
 
 
-% w = v*cos(theta_til)*c_s/(1-c_s*l) + u;
-w = w_ref + u;
+w = v*cos(theta_til)*c_s/(1-c_s*l) + u;
+%w = w_ref + u;
 
-ang_speed_limit = 45; % degrees per second
+% ang_speed_limit = 45; % degrees per second
 
-if w * 180 / pi > ang_speed_limit
-   warning('couldnt perform such high \omega')
-   w = ang_speed_limit * pi / 180;
+ang_speed_limit = 55; % degrees per second
+
+if abs(w * 180 / pi) > ang_speed_limit
+   warning('could not perform such high angular speed')
+   w = ang_speed_limit * pi / 180 * sign(w);
 end
 
 end
