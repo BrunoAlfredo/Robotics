@@ -2,6 +2,8 @@ function RealRobot(trajectory,Sp)
 %RealRobot: Moves the robot in the lab
 %   Detailed explanation goes here
 
+global flagUpdateRobot;
+flagUpdateRobot = 0;
 T = 0.08; % period of the timer
 v_vec = [];
 w_vec = [];
@@ -27,7 +29,7 @@ w_vec = [w_vec; w];
 % Activate the timer of the comands to send to the robot
 % sendMoveTimer = timer('Period', T, 'ExecutionMode', 'fixedRate');
 % sendMoveTimer.StartFcn = @starting;
-% sendMoveTimer.TimerFcn={@updateRobot,v,w,Sp};
+% sendMoveTimer.TimerFcn=@updateRobot;
 % start(sendMoveTimer)
 
 pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1)); % confirmar unidades!
@@ -63,8 +65,10 @@ while (1)
 %       break
 %   end
   %pause(0.08)
-  %pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
-  
+  if flagUpdateRobot==1
+    pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
+    flagUpdateRobot = 0;
+  end
   %sensors = [sensors; aux];
 end
 
@@ -83,8 +87,9 @@ disp(msg)
 disp("Starting the motion of the robot...")
 end
 
-function updateRobot(Obj,event,v,w,Sp)
-    pioneer_set_controls (Sp, round(v*100), round(wrapTo2Pi(w)*180/pi)); % confirmar unidades!
+function updateRobotFlag(Obj,event)
+    global flagUpdateRobot;
+    flagUpdateRobot = 1;
 end
 
 
