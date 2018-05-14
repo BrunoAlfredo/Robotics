@@ -2,16 +2,19 @@ function RealRobot(trajectory,Sp)
 %RealRobot: Moves the robot in the lab
 %   Detailed explanation goes here
 
-global flagUpdateRobot;
+global flagUpdateRobot, flagUpdateSensor;
 flagUpdateRobot = 0;
-T = 0.08; % period of the timer
+flagUpdateSensor = 0;
+T_mov = 0.09; % period of the moving timer
+T_sens = 0.03; % period of the sensors timer
 v_vec = [];
 w_vec = [];
 x_vec = [];
 y_vec = [];
 theta_vec = [];
 sensors =[];
-  
+gradSensors=[];
+
 vec = pioneer_read_odometry;
 x = vec(1);
 y = vec(2);
@@ -27,10 +30,14 @@ theta_vec = [theta_vec; theta];
 w_vec = [w_vec; w]; 
 
 % Activate the timer of the comands to send to the robot
-% sendMoveTimer = timer('Period', T, 'ExecutionMode', 'fixedRate');
-% sendMoveTimer.StartFcn = @starting;
-% sendMoveTimer.TimerFcn=@updateRobot;
-% start(sendMoveTimer)
+% sendMoveTimer = timer('Period', T_mov, 'ExecutionMode', 'fixedRate');
+% sendMoveTimer.StartFcn = {@starting,"Starting the motion of the robot..."};
+% sendMoveTimer.TimerFcn = @updateRobotFlag;
+% readSensorTimer = timer('Period', T_sens, 'ExecutionMode', 'fixedRate');
+% readSensorTimer.StartFcn = {@starting,"Staring reading the sonars"}
+% readSensorTimer.TimerFcn = @updateSensorFlag;
+% start(sendMoveTimer);
+% start(readSensorTimer);
 
 pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1)); % confirmar unidades!
 j = 0;
@@ -69,7 +76,17 @@ while (1)
     pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
     flagUpdateRobot = 0;
   end
-  %sensors = [sensors; aux];
+  if flagSensorRobot==1
+    aux = pioneer_read_sonars;
+	% colocar ciclo while para por o robot a parar quando houver um ostaculo
+    sensors = [sensors; aux];
+	if length(sensors) == 1
+	  gradSensors = [gradSensors;zeros(1,8)];
+	else
+	  gradSensors = [gradSensors;sensors(end)-sensors(end-1)];
+	end
+  end
+  
 end
 
 pioneer_set_controls(Sp,0,0);
@@ -77,14 +94,14 @@ pioneer_set_controls(Sp,0,0);
 end
 
 
-function starting(obj, event)
+function starting(obj, event, message)
 txt1 = ' event occurred at ';
 event_type = event.Type;
 event_time = datestr(event.Data.time);
 
 msg = [event_type txt1 event_time];
 disp(msg)
-disp("Starting the motion of the robot...")
+disp(message)
 end
 
 function updateRobotFlag(Obj,event)
@@ -92,4 +109,8 @@ function updateRobotFlag(Obj,event)
     flagUpdateRobot = 1;
 end
 
+function updateSensorFlag(Obj,event)
+    global flagSensorRobot;
+    flagSensorRobot = 1;
+end
 
