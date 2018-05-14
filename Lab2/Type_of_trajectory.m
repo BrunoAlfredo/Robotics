@@ -1,4 +1,4 @@
-function [ K2, K3, v, i ] = Type_of_trajectory ( x, y )
+function [ K2, K3, v] = Type_of_trajectory ( x, y )
 %Type_of_trajectory: Breaks trajectory into curves and straight lines
 %   Detailed explanation goes here
 
