@@ -9,6 +9,7 @@ real = 1;
 % Mac or windows?
 mac = 1;
 
+peido = 1;
 if real == 1
     delete(timerfindall);
     if mac == 1

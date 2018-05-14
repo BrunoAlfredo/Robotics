@@ -40,7 +40,7 @@ sendMoveTimer = timer('Period', T_mov, 'ExecutionMode', 'fixedRate');
 sendMoveTimer.StartFcn = {@starting,"Starting the motion of the robot..."};
 sendMoveTimer.TimerFcn = @updateRobotFlag;
 readSensorTimer = timer('Period', T_sens, 'ExecutionMode', 'fixedRate');
-readSensorTimer.StartFcn = {@starting,"Staring reading the sonars"};
+readSensorTimer.StartFcn = {@starting,"Staring reading the sonars"}
 readSensorTimer.TimerFcn = @updateSensorFlag;
 start(sendMoveTimer);
 start(readSensorTimer);
@@ -60,10 +60,10 @@ while (1)
     y = y * 0.001; % m
     y_vec = [y_vec; y];
     theta = theta * 0.1 * pi / 180; % rad
-%     figure(4)
-%     subplot(3,1,1), plot(j,x, 'x'), title('x'), hold on
-%     subplot(3,1,2), plot(j,y, 'x'), title('y'), hold on
-%     subplot(3,1,3), plot(j,theta, 'x'), title('\theta'), hold on
+    figure(4)
+    subplot(3,1,1), plot(j,x, 'x'), title('x'), hold on
+    subplot(3,1,2), plot(j,y, 'x'), title('y'), hold on
+    subplot(3,1,3), plot(j,theta, 'x'), title('\theta'), hold on
     figure(3), plot(y,x, 'x','Color',[1, 0.7, 0])
     plot(y_ref, x_ref,'x','Color', 'g')
     theta_vec = [theta_vec; theta];

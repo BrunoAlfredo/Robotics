@@ -25,7 +25,7 @@ for i = 1:length(tr)
     v = timeseries(vt);
     w = timeseries(wt);
     T = tr(2)-tr(1);
-    sim('Unicycle_b.mdl',T,options);
+    sim('Unicycle_c.mdl',T,options);
     x0 = x(end);
     y0 = y(end);
     theta0 = theta(end);
