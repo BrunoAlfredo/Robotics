@@ -2,9 +2,9 @@ function RealRobot(trajectory,Sp)
 %RealRobot: Moves the robot in the lab
 %   Detailed explanation goes here
 
-global flagUpdateRobot flagUpdateSensor;
-flagUpdateRobot = 0;
-flagUpdateSensor = 0;
+% global flagUpdateRobot flagUpdateSensor;
+% flagUpdateRobot = 0;
+% flagUpdateSensor = 0;
 
 T_mov = 0.09; % period of the moving timer
 T_sens = 0.03; % period of the sensors timer
@@ -17,10 +17,6 @@ y_vec = [];
 theta_vec = [];
 sensors =[];
 gradSensors=[];
-
-
-
-
 
 vec = pioneer_read_odometry;
 x = vec(1);
@@ -36,22 +32,30 @@ theta_vec = [theta_vec; theta];
 [w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta);
 w_vec = [w_vec; w];
 
-sendMoveTimer = timer('Period', T_mov, 'ExecutionMode', 'fixedRate');
-sendMoveTimer.StartFcn = {@starting,"Starting the motion of the robot..."};
-sendMoveTimer.TimerFcn = @updateRobotFlag;
-readSensorTimer = timer('Period', T_sens, 'ExecutionMode', 'fixedRate');
-readSensorTimer.StartFcn = {@starting,"Staring reading the sonars"};
-readSensorTimer.TimerFcn = @updateSensorFlag;
-start(sendMoveTimer);
-start(readSensorTimer);
+% sendMoveTimer = timer('Period', T_mov, 'ExecutionMode', 'fixedRate');
+% sendMoveTimer.StartFcn = {@starting,"Starting the motion of the robot..."};
+% sendMoveTimer.TimerFcn = @updateRobotFlag;
+% readSensorTimer = timer('Period', T_sens, 'ExecutionMode', 'fixedRate');
+% readSensorTimer.StartFcn = {@starting,"Staring reading the sonars"};
+% readSensorTimer.TimerFcn = @updateSensorFlag;
+% start(sendMoveTimer);
+% start(readSensorTimer);
 
 
 pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1)); % confirmar unidades!
 j = 0;
-while (1)
+while (j<400)
     j = j+1;
     
     vec = pioneer_read_odometry;
+    aux = pioneer_read_sonars
+    % colocar ciclo while para por o robot a parar quando houver um ostaculo
+    sensors = [sensors; aux];
+    if size(sensors,1) == 1
+        gradSensors = [gradSensors;zeros(1,8)];
+    else
+        gradSensors = [gradSensors;sensors(end,:)-sensors(end-1,:)];
+    end
     x = vec(1);
     y = vec(2);
     theta = vec(3);
@@ -73,30 +77,31 @@ while (1)
     w_vec = [w_vec; w];
     v_vec = [v_vec; v];
     
-    aux = pioneer_read_sonars;
     
-      pause(0.08)
-      pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
+    
+    pause(0.08)
+    pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
 %     if flagUpdateRobot==1
 %         disp([v w])
 %         pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
 %         flagUpdateRobot = 0;
 %     end
     
-    if flagUpdateSensor==1
-        aux = pioneer_read_sonars;
-        % colocar ciclo while para por o robot a parar quando houver um ostaculo
-        sensors = [sensors; aux];
-        if length(sensors) == 1
-            gradSensors = [gradSensors;zeros(1,8)];
-        else
-            gradSensors = [gradSensors;sensors(end)-sensors(end-1)];
-        end
-    end
+%     if flagUpdateSensor==1
+%         aux = pioneer_read_sonars;
+%         % colocar ciclo while para por o robot a parar quando houver um ostaculo
+%         sensors = [sensors; aux];
+%         if length(sensors) == 1
+%             gradSensors = [gradSensors;zeros(1,8)];
+%         else
+%             gradSensors = [gradSensors;sensors(end)-sensors(end-1)];
+%         end
+%     end
     %aux1 = [aux1; aux];
 end
 
 pioneer_set_controls(Sp,0,0);
+save('sensors.mat', 'gradSensors', 'sensors');
 
 end
 

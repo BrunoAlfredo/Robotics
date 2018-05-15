@@ -25,13 +25,14 @@ elseif y > 0.30*3 && y < 2.855 && x > 5*0.30 && x < 3.826 %stright line
     v = 3.5;
     w = 0; K2 = 0; K3 = 0; factor = NaN;
 elseif y > 2.855 && y < 4.5 && x < 3.826 % straight line
-    v = 3.5;
+    disp('Comecei closed loop')
+    v = 2.5;
     K2 = 1.5*v;
     K3 = 3*v;
     rectangle('Position',[2.855 0 4.5-2.855 3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
 elseif y > 4.5 && y < 16.5 && x < 3.826 % straight line
-    v = 3.5; % tested in 11/05 
+    v = 2.5; % tested in 11/05 
     K2 = 1.5*v;
     K3 = 0.8*v;
     rectangle('Position',[4.5 0 16.5-4.5 3.826],'LineStyle','--',...

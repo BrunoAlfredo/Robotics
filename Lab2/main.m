@@ -7,14 +7,14 @@ close all
 % Simultation or reality?
 real = 1;
 % Mac or windows?
-mac = 1;
+mac = 0;
 
 if real == 1
     delete(timerfindall);
     if mac == 1
         Sp = serial_port_start('/dev/tty.usbserial');
     else
-        Sp = serial_port_start('COM5');
+        Sp = serial_port_start('COM3');
     end
     pioneer_init(Sp);
 end
