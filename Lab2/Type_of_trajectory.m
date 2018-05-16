@@ -1,10 +1,10 @@
-function [ K2, K3, v, factor, w] = Type_of_trajectory ( x, y )
+function [ K2, K3, v, factor, w, sonar] = Type_of_trajectory ( x, y )
 %Type_of_trajectory: Breaks trajectory into curves and straight lines
 %   Detailed explanation goes here
 
-figure(3)
+%figure(3)
 factor = 7;
-w = 0;
+w = 0; sonar = 0;
 if y < 0.30*3 && x < 4 * 0.30 % straight line
     v = 3.5;
     w = 0; K2 = 0; K3 = 0; factor = NaN;
@@ -30,12 +30,15 @@ elseif y > 0.30*4 && y < 3.45 && x > 5*0.30 && x < 3.826 %straight line
         'EdgeColor', [0.8, 0.8, 0.8])
 elseif y > 3.45 && y < 5.118 && x < 3.826 % straight line
     disp('Comecei closed loop') % sai da sala
+    beep
     v = 3.5;
-    K2 = 1.5*v;
+    K2 = 2.2*v;
     K3 = 3*v;
     rectangle('Position',[3.45 0 5.118-3.45 3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
 elseif y > 5.118 && y < 16.5 && x < 3.826 % straight line
+    disp('Comecei sonares')
+    sonar = 1;
     v = 3.5; % tested in 11/05 
     K2 = 1.5*v;
     K3 = 0.8*v;

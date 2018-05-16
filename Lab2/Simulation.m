@@ -47,7 +47,7 @@ for i = 1:length(tr)
     wF(i) = wt;
     waitbar(i/length(tr));
     plot(posF(i,2),posF(i,1),'x','Color', [1, 0.7, 0])
-    plot(y_ref, x_ref,'x','Color', 'g')
+    %plot(y_ref, x_ref,'x','Color', 'g')
 end
 % figure;
 % subplot(3,1,1), plot(xF)

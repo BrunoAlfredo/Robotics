@@ -61,6 +61,8 @@ u = u1+u2;
 w = v*cos(theta_til)*c_s/(1-c_s*l) + u;
 %w = w_ref + u;
 
+
+
 % ang_speed_limit = 45; % degrees per second
 
 ang_speed_limit = 55; % degrees per second

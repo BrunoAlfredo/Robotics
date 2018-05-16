@@ -1,10 +1,10 @@
-function [ K2, K3, v, factor, w] = Type_of_trajectory ( x, y )
+function [ K2, K3, v, factor, w, sonar] = Type_of_trajectory ( x, y )
 %Type_of_trajectory: Breaks trajectory into curves and straight lines
 %   Detailed explanation goes here
 
 figure(3)
 factor = 7;
-w = 0;
+w = 0; sonar = 0;
 if y < 0.30*3 && x < 4 * 0.30 % straight line
     v = 3.5;
     w = 0; K2 = 0; K3 = 0; factor = NaN;
@@ -28,18 +28,20 @@ elseif y > 0.30*4 && y < 3.45 && x > 5*0.30 && x < 3.826 %straight line
     w = 0; K2 = 0; K3 = 0; factor = NaN;
     rectangle('Position',[0.30*4 5*0.30 3.45-0.30*4 3.826-0.30*5],'LineStyle','--',...
         'EdgeColor', [0.8, 0.8, 0.8])
-elseif y > 3.45 && y < 4.5 && x < 3.826 % straight line
+elseif y > 3.45 && y < 5.118 && x < 3.826 % straight line
     disp('Comecei closed loop') % sai da sala
     v = 3.5;
     K2 = 1.5*v;
     K3 = 3*v;
     rectangle('Position',[3.45 0 5.118-3.45 3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
-elseif y > 4.5 && y < 16.5 && x < 3.826 % straight line
-    v = .5; % tested in 11/05 
+elseif y > 5.118 && y < 16.5 && x < 3.826 % straight line
+    disp('Comecei sonares')
+    
+    v = 3.5; % tested in 11/05 
     K2 = 1.5*v;
     K3 = 0.8*v;
-    rectangle('Position',[4.5 0 16.5-4.5 3.826],'LineStyle','--',...
+    rectangle('Position',[5.118 0 16.5-4.5 3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
 elseif y > 16.5 && y < 17.25 && x < 3.826 % straight line
     v = 2.5;
@@ -60,9 +62,9 @@ elseif y > 17.25 && y < 18.85 && x < 3.79 % curve
               'EdgeColor', [0.8, 0.8, 0.8])
 elseif y > 17.64 && y < 18.85 && x > 3.79 && x < 16.23 % straight line
     v = 3.5;
-    K2 = 0.8*v;
-    K3 = 2*v;
-    rectangle('Position',[17.64 3.826  18.85-17.64 16.23-3.826],'LineStyle','--',...
+    K2 = 2*v;
+    K3 = 3*v;
+    rectangle('Position',[17.64 3.79  18.85-17.64 16.23-3.79],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
 elseif y > 17.64 && y < 18.85 && x > 16.23 && x < 17.9 % curve
 %     v = 1.516;
