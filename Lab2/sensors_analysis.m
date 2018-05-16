@@ -1,4 +1,4 @@
-load('sensors.mat')
+load('sensors2.mat')
 figure; 
 subplot(2,1,1),hold on,title('Left'),plot(sensors(:,1));
 subplot(2,1,2),hold on,title('Right'),plot(sensors(:,8));
