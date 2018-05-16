@@ -2,11 +2,13 @@ function RealRobot(trajectory,Sp)
 %RealRobot: Moves the robot in the lab
 %   Detailed explanation goes here
 
-% global flagUpdateRobot flagUpdateSensor;
-% flagUpdateRobot = 0;
+global flagUpdateRobot;
+flagUpdateRobot = 0;
 % flagUpdateSensor = 0;
 
-T_mov = 0.09; % period of the moving timer
+wOffset = (0.08/20/5.08+0.075/20/5.062)/2; % pioneer 4
+
+T_mov = 0.08; % period of the moving timer
 T_sens = 0.03; % period of the sensors timer
 
 
@@ -19,6 +21,9 @@ sensors = zeros(2500,8);
 gradSensors= zeros(2500,8);
 correctSensX = 0;
 correctSensY = 0;
+correctOdoX = 0;
+correctOdoY = 0;
+correctOdoTheta = 0;
 
 vec = pioneer_read_odometry;
 x = vec(1);
@@ -61,9 +66,15 @@ while (j<400)
         beep;
         correctSensY = 3.41 - vec(2);
     end
-    x = vec(1) + correctSensX;
-    y = vec(2) + correctSensY;
-    theta = vec(3);
+    
+    correctOdoX = -sin(theta_vec(j-1))*sin(wOffset*T_mov)*v_vec(j-1)*T_mov;
+    correctOdoY = cos(theta_vec(j-1))*sin(wOffset*T_mov)*v_vec(j-1)*T_mov;
+    correctOdoTheta = wOffset*T_mov;
+    fprintf('OdoX:%f, OdoY:%f, OdoTheta:%f',correctOdoX,correctOdoY,correctOdoTheta);    
+    
+    x = vec(1) + correctSensX + correctOdoX;
+    y = vec(2) + correctSensY + correctOdoY;
+    theta = vec(3) + correctOdoTheta;
     x = x * 0.001; % m
     x_vec(j) = x;
     y = y * 0.001; % m
@@ -74,16 +85,17 @@ while (j<400)
 %     subplot(3,1,2), plot(j,y, 'x'), title('y'), hold on
 %     subplot(3,1,3), plot(j,theta, 'x'), title('\theta'), hold on
     figure(3), plot(y,x, 'x','Color',[1, 0.7, 0])
-    plot(y_ref, x_ref,'x','Color', 'g')
+    %plot(y_ref, x_ref,'x','Color', 'g')
     theta_vec(j) = theta;
     
     [w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta);
     
-    w_vec(j) = w;
+    w_vec(j) = w+wOffset;
     v_vec(j) = v;
     
-    pause(0.08)
-    pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
+    pioneer_set_controls (Sp, round(v*100), round((w+wOffset)*180/pi*0.1));
+    pause(T_mov)
+    
 %     if flagUpdateRobot==1
 %         disp([v w])
 %         pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1));
