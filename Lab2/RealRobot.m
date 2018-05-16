@@ -11,19 +11,16 @@ wOffset = (0.08/20/5.08+0.075/20/5.062)/2; % pioneer 4
 T_mov = 0.08; % period of the moving timer
 T_sens = 0.03; % period of the sensors timer
 
-
-v_vec = zeros(2500,1);
-w_vec = zeros(2500,1);
-x_vec = zeros(2500,1);
-y_vec = zeros(2500,1);
-theta_vec = zeros(2500,1);
-sensors = zeros(2500,8);
-gradSensors= zeros(2500,8);
+N = 10000;
+v_vec = zeros(N,1);
+w_vec = zeros(N,1);
+x_vec = zeros(N,1);
+y_vec = zeros(N,1);
+theta_vec = zeros(N,1);
+sensors = zeros(N,8);
+gradSensors= zeros(N,8);
 correctSensX = 0;
 correctSensY = 0;
-correctOdoX = 0;
-correctOdoY = 0;
-correctOdoTheta = 0;
 
 vec = pioneer_read_odometry;
 x = vec(1);
@@ -52,12 +49,12 @@ v_vec(1) = v;
 
 pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1)); % confirmar unidades!
 j = 1;
-while (j<400)
+while (j<N)
     j = j+1;
     
     vec = pioneer_read_odometry;
     aux = pioneer_read_sonars;
-    % colocar ciclo while para por o robot a parar quando houver um ostaculo
+    % colocar ciclo while para por o robot a parar quando houver um obstaculo
     sensors(j,:) = aux(1:8);
     gradSensors(j,:) = sensors(j,:)-sensors(j-1,:);
         

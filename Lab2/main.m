@@ -7,7 +7,7 @@ close all
 % Simultation or reality?
 real = 0;
 % Mac or windows?
-mac = 0;
+mac = 1;
 
 if real == 1
     delete(timerfindall);

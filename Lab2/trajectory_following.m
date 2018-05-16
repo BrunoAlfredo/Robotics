@@ -66,7 +66,7 @@ w = v*cos(theta_til)*c_s/(1-c_s*l) + u;
 ang_speed_limit = 55; % degrees per second
 
 if abs(w * 180 / pi) > ang_speed_limit
-   warning('could not perform such high angular speed')
+   %warning('could not perform such high angular speed')
    w = ang_speed_limit * pi / 180 * sign(w);
 end
 

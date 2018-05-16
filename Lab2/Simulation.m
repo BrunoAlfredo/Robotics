@@ -4,7 +4,7 @@ function Simulation(trajectory)
 
 % Declaration of simulation variables
 Nt = 200; % number of simulation points
-t_final = 20;
+t_final = 17;
 
 
 tr = linspace(0, t_final, Nt)';
