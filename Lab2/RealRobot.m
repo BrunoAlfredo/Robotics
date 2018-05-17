@@ -2,11 +2,11 @@ function RealRobot(trajectory,Sp)
 %RealRobot: Moves the robot in the lab
 %   Detailed explanation goes here
 
-global flagUpdateRobot;
-flagUpdateRobot = 0;
-% flagUpdateSensor = 0;
+% global flagUpdateRobot;
+% flagUpdateRobot = 0;
 
-wOffset = (0.08/20/5.08+0.075/20/5.062)/2; % pioneer 4
+% wOffset = (0.08/20/5.08+0.075/20/5.062)/2; % pioneer 4
+wOffset = (0.07/20/5.005+0.0057/20/5.032)/2; % pioneer 7: desvia esquerda
 
 T_mov = 0.08; % period of the moving timer
 T_sens = 0.03; % period of the sensors timer
@@ -67,19 +67,22 @@ while (j<N)
     
     [~,~,~,~,~,sonar_signal] = Type_of_trajectory ( x, y );
     sonar = pioneer_read_sonars;
+    type = '.';
     if sonar_signal
         % sonar correction
         [w_inc, sonar] = sonar_correction;
         figure(5)
 %         subplot(2,1,1), plot(j,sonar(1),'x','Color','g'), hold on
 %         subplot(2,1,2), plot(j,sonar(8),'x','Color','b'), hold on
+        type = 'x';
         w_sonar = w_sonar + w_inc;
+        disp(w_sonar);
         w_correction = wOffset + w_sonar;
     end
     figure(5)
-    subplot(3,1,1), plot(j,sonar(1),'x','Color','g'), hold on
-    subplot(3,1,2), plot(j,sonar(8),'x','Color','b'), hold on
-    subplot(3,1,3), plot(j,w_correction,'x','Color','r'), hold on
+    subplot(3,1,1), plot(j,sonar(1),type,'Color','g'), hold on
+    subplot(3,1,2), plot(j,sonar(8),type,'Color','b'), hold on
+    subplot(3,1,3), plot(j,w_correction,type,'Color','r'), hold on
 
 
     
@@ -97,12 +100,20 @@ while (j<N)
     y = y * 0.001; % m
     y_vec(j) = y;
     theta = theta * 0.1 * pi / 180; % rad
+    
+    % faz plot da odometria ao longo do tempo
 %     figure(4)
 %     subplot(3,1,1), plot(j,x, 'x'), title('x'), hold on
 %     subplot(3,1,2), plot(j,y, 'x'), title('y'), hold on
 %     subplot(3,1,3), plot(j,theta, 'x'), title('\theta'), hold on
-    %figure(3), plot(y,x, 'x','Color',[1, 0.7, 0])
+
+    % faz plot da trajetoria ao longo do tempo
+    plot_trajectory(x,y,sonar)
     %plot(y_ref, x_ref,'x','Color', 'g')
+    
+    % faz plot da leitura dos sonares ao longo da trajetoria
+    
+    
     theta_vec(j) = theta;
     
     [w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta);

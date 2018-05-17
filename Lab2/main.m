@@ -5,7 +5,7 @@ clear
 close all
 
 % Simultation or reality?
-real = 1;
+real = 0;
 % Mac or windows?
 mac = 1;
 
