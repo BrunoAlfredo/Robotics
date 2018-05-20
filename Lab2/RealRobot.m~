@@ -16,11 +16,15 @@ v_vec = zeros(N,1);
 w_vec = zeros(N,1);
 x_vec = zeros(N,1);
 y_vec = zeros(N,1);
+x_real = zeros(N,1);
+y_real = zeros(N,1);
+
 theta_vec = zeros(N,1);
 sensors = zeros(N,8);
 gradSensors= zeros(N,8);
 correctSensX = 0;
 correctSensY = 0;
+corr_flag = 0
 
 vec = pioneer_read_odometry;
 x = vec(1);
@@ -48,7 +52,7 @@ v_vec(1) = v;
 
 
 pioneer_set_controls (Sp, round(v*100), round(w*180/pi*0.1)); % confirmar unidades!
-j = 1; w_sonar = 0;
+j = 1;
 while (j<N)
     j = j+1;
     
@@ -65,22 +69,36 @@ while (j<N)
     end
     w_correction = wOffset;
     
-    [~,~,~,~,~,sonar_signal] = Type_of_trajectory ( x, y );
+    [~,~,~,~,~,sonar_signal,jo] = Type_of_trajectory (x,y);
     sonar = pioneer_read_sonars;
     type = '.';
     if sonar_signal
+        % corrects odometry from sonars
+        if corr_flag == 1
+            % remove all zeros from vector
+            x_real(x_real == 0) = [];
+            y_real(y_real == 0) = [];
+
+            x_correction = mean(x_real);
+            y_correction = mean(y_real);
+            
+            correctSensX = x - x_correction;
+            correctSensY = y - y_correction;
+
+            % reallocates vector to get them ready for another correction
+            x_real = zeros(N,1);
+            y_real = zeros(N,1);
+        end
+        
         % sonar correction
-        [w_inc, sonar] = sonar_correction;
+        [x_real(j),y_real(j),] = sonar_correction(x,y,x_ref,y_ref,jo,sonar);
         figure(5)
 %         subplot(2,1,1), plot(j,sonar(1),'x','Color','g'), hold on
 %         subplot(2,1,2), plot(j,sonar(8),'x','Color','b'), hold on
         type = 'x';
-        w_sonar = w_sonar + w_inc;
-        disp(w_sonar);
-        w_correction = wOffset + w_sonar;
     end
-    figure(3)
-    plot(
+    
+    
     figure(5)
     subplot(3,1,1), plot(j,sonar(1),type,'Color','g'), hold on
     subplot(3,1,2), plot(j,sonar(8),type,'Color','b'), hold on

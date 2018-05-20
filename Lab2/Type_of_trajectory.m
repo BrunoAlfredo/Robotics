@@ -4,7 +4,7 @@ function [ K2, K3, v, factor, w, sonar, j] = Type_of_trajectory ( x, y )
 
 figure(3)
 factor = 7;
-w = 0; sonar = 0;
+w = 0; sonar = 0; corr_flag = 0;
 if y < 0.30*3 && x < 4 * 0.30 % straight line
     v = 3.5;
     w = 0; K2 = 0; K3 = 0; factor = NaN; j = 1;
@@ -32,15 +32,14 @@ elseif y > 3.45 && y < 5.118 && x < 3.826 % straight line
               'EdgeColor', [0.8, 0.8, 0.8])
 elseif y > 5.118 && y < 17.5 && x < 3.826 % straight line
     j = 5;
-    if y > 6
-        disp('Comecei sonares')
-        sonar = 1;
-    end
+    sonar = 1;
     v = 3.5; % tested in 11/05 
     K2 = 1.5*v;
     K3 = 3*v;
     rectangle('Position',[5.118 0 17.5-5.118 3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
+    line([6.913, 6.913], [2.155, 3.826],'LineStyle','--',...
+              'Color', 'r')
 elseif y > 17.5 && y < 18.03 && x < 3.826 % straight line
     j = 6;
     v = 2.5;
