@@ -11,14 +11,14 @@ m = [1.671, 1.672, 1.672, 1.672, 1.206, 1.206, 1.209, 1.674, 1.705, ...
      1.18,  0.74,  1.18,  0.15,  0.495, 0.20,  15.743,15.767,15.747,...
      15.995]; % m
 
-a = m(28)+3.45-m(5)/2; b = m(26)-(m(7)+m(12))/2; c = 2.99; d = 3.45; %2.36+0.495
+a = m(28)+3.45-m(5)/2; b = m(26)-(m(7)+m(12))/2; c = 3.15; d = 3.45; %2.99 %2.36+0.495
 
 measured_points = [0,                                           0;... % [x,y]
                    1.8-0.8                                      0;...
                    2-0.3                                      0.2;...
                    2.7-0.4,                                   0.7;...
                    2.84-0.3,                                 1.18;...
-                   2.99,                                        d;... %pontos da sala
+                   c,                                        d;... %pontos da sala
                    c,                                     d+m(14);... 
                    c,                                         a-1;...
                    c+1,                                         a;...
@@ -47,7 +47,7 @@ line([d, d],[c+m(1)/2, c-m(1)/2+m(27)],'Color', 'black', 'LineWidth', wid)
 
 t = linspace(0,10,size(measured_points,1));
 x_measured = measured_points(:,1);
-y_measured = measured_points(:,2)+0.19;
+y_measured = [measured_points(1:2,2);measured_points(3:end,2)];
 
 % Interpolation
 t_query = linspace(t(1), t(end), Nt)';
@@ -84,4 +84,3 @@ trajectory = [t_query, x_ref_pp, y_ref_pp, theta_ref_pp, w_ref_pp];
 
 
 end
-
