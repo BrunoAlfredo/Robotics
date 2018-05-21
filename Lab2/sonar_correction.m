@@ -1,6 +1,8 @@
-function [x_real, y_real, corr_flag] = sonar_correction (x,y, x_ref,y_ref,j,sonar)
+function [x_real, y_real, corr_flag] = sonar_correction (x,y, x_ref,y_ref,j,sensors)
 %sonar_correction: correct odometry using sonars
 %   Detailed explanation goes here
+
+
 
 % correction in x (1st and 3rd corridor)
 % two sonar area
