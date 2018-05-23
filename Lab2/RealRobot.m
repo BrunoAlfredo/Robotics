@@ -12,7 +12,7 @@ T_mov = 0.1; % period of the moving timer
 T_sens = 0.03; % period of the sensors timer
 T_odom = 0;
 
-N = 650;
+N = 700;
 v_vec = zeros(N,1);
 w_vec = zeros(N,1);
 x_vec = zeros(N,1);
@@ -24,7 +24,9 @@ sensors = zeros(N,8);
 gradSensors= zeros(N,8);
 correctSensX = 0;
 correctSensY = 0;
+correctSensTheta = 0;
 flagSituation = 0;
+x_real = zeros(N,1);
 
 vec = pioneer_read_odometry;
 x = vec(1);
@@ -58,9 +60,9 @@ while (j<N)
     j = j+1;
     
     vec = pioneer_read_odometry;
-    aux = pioneer_read_sonars;
+    sonar = pioneer_read_sonars;
     % colocar ciclo while para por o robot a parar quando houver um obstaculo
-    sensors(j,:) = aux(1:8);
+    sensors(j,:) = sonar(1:8);
     gradSensors(j,:) = sensors(j,:)-sensors(j-1,:);
         
     %fprintf('(x,y)=(%d,%d),   grad sensor=%d\n',vec(1),vec(2),gradSensors(j,8));
@@ -97,7 +99,7 @@ while (j<N)
     y_noodo(j) = vec(2)*0.001;
     y = vec(2)*0.001 + correctSensY + correctOdoY;
     theta = vec(3)*0.1*pi/180 + correctOdoTheta;
-    fprintf('VecX:%f, X:%f, VecY:%f, Y:%f\n',vec(1)*0.001,x,vec(2)*0.001,y);
+    %fprintf('VecX:%f, X:%f, VecY:%f, Y:%f\n',vec(1)*0.001,x,vec(2)*0.001,y);
     x_vec(j) = x;
     y_vec(j) = y;
 %     figure(4)
@@ -107,6 +109,59 @@ while (j<N)
     figure(3), plot(y,x, 'x','Color',[1, 0.7, 0])
     %plot(y_ref, x_ref,'x','Color', 'g')
     theta_vec(j) = theta;
+    
+    % sonars
+    [~,~,~,~,~,sonar_signal,jo] = Type_of_trajectory (x,y);
+    type = '.';
+    if sonar_signal
+        % corrects odometry from sonars
+        if corr_flag == 1 && stop_corr == 0
+            % remove all zeros from vector
+            x_real(x_real == 0) = [];
+            y_real(y_real == 0) = [];
+            theta_real(theta_real == 0) = [];
+            
+            x_correction = mean(x_real);
+            y_correction = mean(y_real);
+            theta_correction = mean(theta_real);
+            disp(theta_correction*180/pi);
+%             correctSensX = x - x_correction;
+%             correctSensY = y - y_correction;
+            correctSensTheta = theta_correction - theta; % novo
+            
+            figure(6), plot(theta_real*180/pi), title('angulo sonares')
+            % reallocates vector to get them ready for another correction
+            x_real = zeros(N,1);
+            y_real = zeros(N,1);
+            theta_real = zeros(N,1);
+            stop_corr = 1;
+        end
+        
+        % sonar correction
+        %dist = norm(x_vec(j)-x_vec(j-1) , y_vec(j)-y_vec(j-1));
+        [theta_real(j),corr_flag, type] = ...
+            sonar_correction(x,y,theta,x_ref,y_ref,jo,gradSensors,j,T_mov);
+    end
+    
+    figure(5)
+    subplot(3,1,1), plot(j,sonar(1),type,'Color','g'), hold on
+    subplot(3,1,2), plot(j,sonar(8),type,'Color','b'), hold on
+    subplot(3,1,3), plot(j,gradSensors(j,8),type,'Color','r'), hold on
+    
+    % plots odometry evolution in time
+%     figure(4)
+%     subplot(3,1,1), plot(j,x, 'x'), title('x'), hold on
+%     subplot(3,1,2), plot(j,y, 'x'), title('y'), hold on
+%     subplot(3,1,3), plot(j,theta, 'x'), title('\theta'), hold on
+
+
+
+    % plots trajectory evolution in time
+    plot_trajectory(x,y,sonar)
+    %plot(y_ref, x_ref,'x','Color', 'g')
+    
+    % end of sonar part
+    
     
     [w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta,flagSituation);
     flagSituation = 0;
