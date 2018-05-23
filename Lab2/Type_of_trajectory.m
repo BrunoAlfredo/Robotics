@@ -27,53 +27,53 @@ elseif y > 3.45+0.19 && y < 5.118 && x < 3.826 % straight line
     j = 4;
     v = 3;
     K2 = 3*v;
-    K3 = 1.5*v;
+    K3 = 1*v; %1.5
     rectangle('Position',[3.45+0.19 0 5.118-3.45+0.19 3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
-elseif y > 5.118 && y < 16 && x < 3.826 % straight line
+elseif y > 5.118 && y < 16.5 && x < 3.826 % straight line
     j = 5;
     if y > 6
         %disp('Comecei sonares')
         sonar = 1;
     end
-    v = 3; % tested in 11/05 
+    v = 3.5; % tested in 11/05 
     K2 = 2*v;
     K3 = 1*v;
-    rectangle('Position',[5.118 0 16-5.118 3.826],'LineStyle','--',...
+    rectangle('Position',[5.118 0 16.5-5.118 3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
-elseif y > 16 && y < 17.5 && x < 3.826 % straight line
-    j = 6
-    v = 2; % 2.5
-    K2 = 1*v;
+elseif y > 16.5 && y < 17.6 && x < 3.826 % straight line
+    j = 6;
+    v = 2.5; % 2.5
+    K2 = 1.2*v; %1
     K3 = 0.8*v;
-    rectangle('Position',[16 0 17.5-16 3.826],'LineStyle','--',...
+    rectangle('Position',[16.5 0 17.6-16.5 3.826],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
-elseif y > 17.5 && y < 19.45 && x < 3.99 || flagSituation==1% curve
-    j = 7
+elseif y > 17.6 && y < 19.45 && x < 3.99 || flagSituation==1% curve
+    j = 7;
     %v = 1.5161;
     v = 2;
-    r = 1.1;
+    r = 1;
     w = -v/r; factor = NaN; K2 = 0; K3 = 0;
-    rectangle('Position',[17.5 0 19.45-17.5 3.99],'LineStyle','--',...
+    rectangle('Position',[17.6 0 19.45-17.6 3.99],'LineStyle','--',...
               'EdgeColor', [0.8, 0.8, 0.8])
 elseif y > 18.03 && y < 19.45 && x > 3.99 && x < 5.5 % straight line
     j = 8
     v = 2.5;
-    K2 = 1.5*v;
-    K3 = 1*v;
-    rectangle('Position',[18.03 5.5  19.45-18.03 15.57-5.5],'LineStyle','--',...
+    K2 = 4*v;
+    K3 = 2*v;
+    rectangle('Position',[18.03 3.99  19.45-18.03 5.5-3.99],'LineStyle','--',...
         'EdgeColor', [0.8, 0.8, 0.8])
 elseif y > 18.03 && y < 19.45 && x > 5.5 && x < 15.57 % straight line
     j = 9
-    v = 3;
-    K2 = 1*v;
-    K3 = 0.8*v;
+    v = 3.5;
+    K2 = 0.1;%4*v;
+    K3 = 0.01;%2*v;
     rectangle('Position',[18.03 5.5  19.45-18.03 15.57-5.5],'LineStyle','--',...
         'EdgeColor', [0.8, 0.8, 0.8])
 elseif y > 18.03 && y < 19.45 && x > 15.57 && x < 16.07 % straight line
     j = 10;
-    v = 3.5;
-    K2 = 1*v;
+    v = 2.5;
+    K2 = 1.2*v;
     K3 = 0.8*v;
     rectangle('Position',[18.03 15.57  19.45-18.03 16.07-15.57],'LineStyle','--',...
         'EdgeColor', [0.8, 0.8, 0.8])

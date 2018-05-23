@@ -12,7 +12,7 @@ T_mov = 0.1; % period of the moving timer
 T_sens = 0.03; % period of the sensors timer
 T_odom = 0;
 
-N = 650;
+N = 700;
 v_vec = zeros(N,1);
 w_vec = zeros(N,1);
 x_vec = zeros(N,1);
