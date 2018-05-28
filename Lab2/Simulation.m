@@ -3,18 +3,17 @@ function Simulation(trajectory)
 %   Detailed explanation goes here
 
 % Declaration of simulation variables
-Nt = 200; % number of simulation points
-t_final = 17;
-
+Nt = 900; % number of simulation points
+t_final = 20;
 
 tr = linspace(0, t_final, Nt)';
 options=simset('SrcWorkspace','current','DstWorkspace','current');
 xF=[];
 yF=[];
 thetaF=[];
-x0 = 0;
-y0 = -0.1;
-theta0 = 0;
+x0 = 3.15;
+y0 = 13.96;
+theta0 = 90;
 wt = 0;
 figure(3),hold on
 posF = zeros(length(tr),3);
@@ -39,7 +38,7 @@ for i = 1:length(tr)
     theta = theta0;
     
     
-    [wt,vt, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta);
+    [wt,vt] = trajectory_following(trajectory, x, y, theta, trajectory(:,2),trajectory(:,3));
     
     
     wt = round(wrapToPi(wt)*180/pi);

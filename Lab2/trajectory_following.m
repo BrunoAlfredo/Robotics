@@ -1,10 +1,13 @@
-function [w,v, x_ref, y_ref] = trajectory_following(trajectory, x, y, theta, flagSituation)
+function [w,v, x_ref, y_ref, x0, y0] = trajectory_following(trajectory, x, y, theta,x0_vec,y0_vec)
 %trajectory_following: follows the trajectory
-%   input: v -> constant, trajectory -> constant, d = 0?
-% .        w_actual -> present angular velocity
+%   input: trajectory -> present trajectory (could be the corrected one)
+%          x, y, theta -> robot coordinates
+%          x0,y0 -> original trajectory coordinates to guide the robot
+%          through the gains after correction
 %   output: w_next -> next angular velocity to meet trajectory
 
-[K2, K3, v_max, factor, w_open] = Type_of_trajectory (x, y, flagSituation);
+
+
 
 
 % x_ref, y_ref vector and theta_ref vector
@@ -16,9 +19,9 @@ w_ref_vector = trajectory(:,5,:);
 % Finding x_ref, y_ref, theta_ref from trajectory
 aux = sqrt((x_ref_vector-x).^2 + (y_ref_vector-y).^2);
 [l,i_ref] = min(aux);
-if i_ref == 1
+if i_ref == 1 % 1st step of the robot
    w=0;
-   x_ref = 0; y_ref = 0; v = v_max;
+   x_ref = 0; y_ref = 0; v = 3.5; x0 = 0; y0 = 0;
    return  
 end
 x_ref = x_ref_vector(i_ref);
@@ -27,6 +30,11 @@ theta_ref = theta_ref_vector(i_ref);
 w_ref = w_ref_vector(i_ref);
 theta_ref_direction = [x_ref - x_ref_vector(i_ref-1), y_ref - y_ref_vector(i_ref-1) , 0];
 l_direction = [x - x_ref , y - y_ref , 0];
+x0 = x0_vec(i_ref);
+y0 = y0_vec(i_ref);
+
+[K2, K3, v_max, factor, w_open] = Type_of_trajectory (x0, y0);
+
 
 % open-loop
 if isnan(factor)
@@ -40,9 +48,11 @@ if v > v_max
    v = v_max; 
 end
 
+
 % Re-parametrizing the state space and using the linearization
-r = v / w_ref;
-c_s = 1/r;
+% r = v / w_ref; disp(r)
+% c_s = 1/r; 
+c_s = 0;
 theta_til = theta_ref - theta;
 theta_til_degrees = 180/pi * theta_til; % for debug
 
