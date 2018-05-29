@@ -24,7 +24,7 @@ if y < a1 && x < b1 % straight line
           
 elseif y < a2 && x > b1 && x < b2 % curve zone
     v = 3.5;
-    r = 0.41 * 4;
+    r = 0.4 * 4;
     w = v/r; K2 = 0; K3 = 0; factor = NaN; j = 2;
     rectangle('Position',[0 b1 a2 b2-a2],'LineStyle','--',...
         'EdgeColor', [0.8, 0.8, 0.8])
@@ -88,7 +88,7 @@ elseif y > a9 && y < a8 && x > b5 && x < b6 % big straight line
         'EdgeColor', [0.8, 0.8, 0.8])
 elseif y > a9 && y < a8 && x > b6 && x < b7 % straight line
     j = 11;
-    v = 2.5; 
+    v = 2.5;
     K2 = 1.2*v;
     K3 = 1.2*v;
     rectangle('Position',[a9 b6  a8-a9 b7-b6],'LineStyle','--',...

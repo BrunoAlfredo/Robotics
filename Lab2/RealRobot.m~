@@ -168,8 +168,7 @@ while (j<N)
     % corrects y in the 2nd corridor
     if gradSensors(j,8)>=0.10 && jo == 11
         beep
-        correctSensX = 15.7590 - x;
-        disp(correctSensY)
+        correctSensY = 15.7590 - y;
     end
     
     
