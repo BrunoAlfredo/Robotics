@@ -7,17 +7,22 @@ function [theta_real, corr_flag, type, x_real] = sonar_correction (x,y, theta, x
 % correction in x (1st and 3rd corridor)
 % two sonar area
 type = '.';
-a = 5.5; b = 6;
-a13 = 16.7;  a14 = 17.3;
+% a = 2.314+6.247+2; b = 2.314+11.988-2;
+% a13 = 16.7;  a14 = 17.3;
+
+
+a = 5.5+1;
+b = 3.45+7.891-3.5;
 if (y > a && y <b && j == 5)% || (y > a13 && y < a14 && j == 13)
 %     desvio = (sonar(1) + sonar(8))/2;
 %     x_real = x_ref + desvio;
 %     y_real = y_ref;
 
     % corrects theta
-    psi_real_8 = abs(atan2(gradSensors(i,8), T)); 
-    psi_real_1 = abs(atan2(gradSensors(i,1), T));
-    psi_real = (psi_real_8 + psi_real_1)/2;
+%     psi_real = abs(atan2(gradSensors(i,8), T)); 
+    psi_real = abs(atan2(gradSensors(i,1), T));
+%     psi_real = (psi_real_8 + psi_real_1)/2;
+    
     if gradSensors(i,1) > 0 && gradSensors(i,8) < 0 % right is growing
         psi_real = psi_real * -1;
     end

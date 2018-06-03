@@ -3,7 +3,7 @@ pioneer_init(Sp);
    
 %%
 serial_port_stop(Sp)
-
+ pause(2)
 
 %%
 pioneer_set_controls(Sp,200,0);

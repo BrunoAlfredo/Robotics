@@ -24,7 +24,12 @@ trajectory = trajectory_generator;
 
 % Simulation or real robot?
 if real == 1
-   RealRobot(trajectory, Sp);
+    RealRobot(trajectory, Sp);
+    if mac == 1
+        Sp = serial_port_stop('/dev/tty.usbserial');
+    else
+        Sp = serial_port_stop('COM3');
+    end
 else
    Simulation(trajectory);
 end

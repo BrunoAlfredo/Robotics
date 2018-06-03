@@ -2,8 +2,11 @@ function Simulation(trajectory)
 %SIMULATION: Simulates the behaviour of the robot
 %   Detailed explanation goes here
 
+global lassie;
+lassie = 0;
+
 % Declaration of simulation variables
-Nt = 300; % number of simulation points
+Nt = 3000/2; % number of simulation points
 t_final = 60;
 
 tr = linspace(0, t_final, Nt)';

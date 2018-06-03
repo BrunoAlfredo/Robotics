@@ -54,7 +54,6 @@ end
 % c_s = 1/r; 
 c_s = 0;
 theta_til = theta_ref - theta;
-theta_til_degrees = 180/pi * theta_til; % for debug
 
 % Signal of "l"
 cross_prod = cross(theta_ref_direction, l_direction);
@@ -71,12 +70,14 @@ u = u1+u2;
 w = v*cos(theta_til)*c_s/(1-c_s*l) + u;
 %w = w_ref + u;
 
-ang_speed_limit = 45; % degrees per second
+%ang_speed_limit = 45; % degrees per second
 
-%ang_speed_limit = 55; % degrees per second
+
+% w = w_ref - gradSensors - K2*v*l;
+ang_speed_limit = 45; % degrees per second 
 
 if abs(w * 180 / pi) > ang_speed_limit
-   %warning('could not perform such high angular speed')
+   warning('could not perform such high angular speed')
    w = ang_speed_limit * pi / 180 * sign(w);
 end
 
