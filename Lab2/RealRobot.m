@@ -112,10 +112,10 @@ while (j<N)
     theta = wrapToPi(vec(3)*0.1*pi/180) + correctOdoTheta - correctSensTheta;
     
     %fprintf('VecX:%f, X:%f, VecY:%f, Y:%f\n',vec(1)*0.001,x,vec(2)*0.001,y);
-    %     figure(4)
-    %     subplot(3,1,1), plot(j,x, 'x'), title('x'), hold on
-    %     subplot(3,1,2), plot(j,y, 'x'), title('y'), hold on
-    %     subplot(3,1,3), plot(j,theta, 'x'), title('\theta'), hold on
+        figure(4)
+        subplot(3,1,1), plot(j,x, 'x'), title('x'), hold on
+        subplot(3,1,2), plot(j,y, 'x'), title('y'), hold on
+        subplot(3,1,3), plot(j,theta, 'x'), title('\theta'), hold on
     
     
     % sonars
@@ -198,11 +198,14 @@ while (j<N)
     subplot(3,1,3), plot(j,gradSensors(j,8),type,'Color','r'), hold on
     
     %plots odometry evolution in time
-    %     figure(4)
-    %     subplot(3,1,1), plot(j,x, 'x'), title('x'), hold on
-    %     subplot(3,1,2), plot(j,y, 'x'), title('y'), hold on
-    %     subplot(3,1,3), plot(j,theta, 'x'), title('\theta'), hold on
-    
+        figure(4)
+        subplot(3,1,1), plot(j,x, 'x'), title('x'), hold on
+        subplot(3,1,2), plot(j,y, 'x'), title('y'), hold on
+        subplot(3,1,3), plot(j,theta, 'x'), title('\theta'), hold on
+        
+        figure(10)
+        plot(j,w, 'x'), title('\omega'), hold on
+
     
     
     % plots trajectory evolution in time
@@ -332,6 +335,7 @@ while (j<N)
     figure(3), plot(y,x, 'x','Color',[1, 0.7, 0])
     plot(y_ref, x_ref,'x','Color', 'g')
     theta_vec(j) = theta;
+    
     
     
     
